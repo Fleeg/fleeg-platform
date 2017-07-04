@@ -12,7 +12,7 @@ When you make a contribution to the Fleeg project, you agree:
 By submitting a pull request to Fleeg project you agree to the above statements.
 
 ### Code of Conduct
-Help us keep Fleeg Community open and inclusive that [Code of Conduct][coc]. Please read and follow it.
+Help us keep Fleeg Community open and inclusive following our [Code of Conduct][coc]. Please, read it with attention.
 
 ### License
 Every code patch accepted in Fleeg project codebase is licensed under AGPL v3.0. You must be careful to not include any code that can not be licensed under this license.
@@ -20,7 +20,9 @@ Every code patch accepted in Fleeg project codebase is licensed under AGPL v3.0.
 Please read carefully [our license][license] and ask us if you have any questions.
 
 ### Where to Start
-To know how you can contribute to Fleeg project development, please check out project [Wiki][wiki] and Developer Guidelines [page][developer]. If you have any question you can join us in [Slack][slack].
+To know how you can contribute to Fleeg project development, please check out project [Wiki][wiki] and Developer Guidelines [page][developer]. If you have any question you can join us on [Slack][slack].
+
+Another way to start is to see bugs open on project issues.
 
 
 [coc]: https://github.com/Fleeg/fleeg-platform/blob/master/CODE_OF_CONDUCT.md
