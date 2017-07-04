@@ -28,5 +28,5 @@ Another way to start is to see bugs open on project issues.
 [coc]: https://github.com/Fleeg/fleeg-platform/blob/master/CODE_OF_CONDUCT.md
 [license]: https://github.com/Fleeg/fleeg-platform/blob/master/LICENSE
 [wiki]: https://github.com/Fleeg/fleeg-platform/wiki
-[developer]: https://github.com/Fleeg/fleeg-platform/wiki
+[developer]: https://github.com/Fleeg/fleeg-platform/wiki/Developer-Guidelines
 [slack]: https://fleeg.slack.com
