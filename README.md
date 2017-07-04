@@ -1,2 +1,17 @@
-# fleeg-platform
-Fleeg is a free and open source social network to index pages.
+# Welcome to Fleeg!
+Fleeg is a free and open source social network to index pages, where everyone can contribute to build that platform as you can and prefer. It is built on top Django framework and Python language, so Fleeg project are focus on delivery a free platform for end users, and will be available for all user as soon we think it is stable enough to user get a good experience. You may help us to delivery it faster, see below links to know how:
+
+* [About](https://github.com/Fleeg/fleeg-platform/wiki/About)
+* [Contributing](https://github.com/Fleeg/fleeg-platform/blob/master/CONTRIBUTING.md)
+* [Developer Guidelines](https://github.com/Fleeg/fleeg-platform/wiki/Developer-Guidelines)
+* [Features](https://github.com/Fleeg/fleeg-platform/wiki/Features)
+
+## Contact Us
+If you need help to setup Fleeg, want to talk about some cool enhancement or you have some questions, please join us in [Slack](http://fleeg.slack.com/).
+
+## Code of Conduct
+Help us keep the Fleeg Community open and inclusive. Please read and follow our [Code of Conduct](https://github.com/Fleeg/fleeg-platform/blob/master/CODE_OF_CONDUCT.md).
+
+## License
+Fleeg platform is licensed under AGPL v3.0. You must be careful to not include any code that can not be licensed under this license.
+Please read carefully [our license](https://github.com/Fleeg/fleeg-platform/blob/master/LICENSE) and ask us if you have any questions.
