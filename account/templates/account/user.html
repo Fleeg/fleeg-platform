@@ -1,0 +1,25 @@
+{% extends 'profile.html' %}
+{% load staticfiles %}
+{% block profile-wall %}
+{% for user in users %}
+<!-- user item -->
+<div class="item fwall-content">
+    <div class="fpublished-item">
+        <div class="fspace-item">
+            <div class="fimage-publisher" style="width:150px; height:150px;">
+                <img src="{% static 'img/profile/default.jpg' %}" class="img-circle fimg-circle" style="width:150px; height:150px;" />
+            </div>
+            <div class="fname-publisher" style="width:250px; margin-left: 20px; margin-top:20px;" >
+                <div style="font-size:25px; font-weight: 900;">
+                    <a href="{% url 'profile' user.username %}" style="color:#000">
+                        {{ user.first_name }} {{ user.last_name }}
+                    </a>
+                </div>
+                <div>@{{ user.username }}</div>
+                <div style="font-size:11px; color:#666; width:300px;">20 Views</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

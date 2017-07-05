@@ -1,0 +1,91 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
+        <link href="{% static 'libs/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet" media="screen">
+        <!-- scripts -->
+        <script src="{% static 'libs/jquery/jquery.js' %}"></script>
+        <script src="{% static 'libs/bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/fleeg.js' %}"></script>
+  </head>
+  <body style="margin-right:0;">
+	<!-- HEADER -->
+    <div class="nav-reaction" style="border-top:0">
+		<div class="navbar navbar-default navbar-fixed-top fnav">
+            <div class="navbar-header" style="width:220px; margin: 5px 10px;">
+                <a class="navbar-brand" style="padding:0;" href="{% url 'home' %}">
+                    [ADD LOGO HERE]
+                </a>
+            </div>
+            <div class="col-lg-5" style="margin-top:10px;">
+                <form onsubmit="return false;" id="form-search">
+                <div class="input-group">
+                  <input type="text" class="form-control flogin-input" name="text-search" id="input-search" placeholder="What are you searching?">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" style="padding:5.5px 30px; background-color:#47A447; border-color: #398439;"
+                         onclick="window.location.replace('/search?p='+$('#input-search').val());">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                  </span>
+                </div>
+                </form>
+            </div>
+            <div class="col-lg-3" style="margin: 10px; float:right;">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown"
+                           href="javascript:void(0)" style="color:#222;padding:0;font-size:25px;margin-right:20px;">
+                            <span class="glyphicon glyphicon-bell"></span>
+                            <div class="falert-number-bg">
+                                <div class="falert-number" id="notification-count"></div>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li id="notification-content"></li>
+                      </ul>
+                    </li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding:0;">
+                          <img width="30px"  src="{% static 'img/profile/default.jpg' %}" />
+                          <strong style="color:#222;margin-right:20px;">{{ user.first_name }} {{ user.last_name }}</strong>
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li><a href="{% url 'profile' username=user.username %}">Profile</a></li>
+                        <li><a href="#">Settings</a></li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="{% url 'account_logout' %}">Sign out</a>
+                        </li>
+                      </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% block content %}{% endblock %}
+    <!-- Modal -->
+    <div id="info-modal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- dialog body -->
+                <div class="modal-body" id="modal-body-content"></div>
+                <!-- dialog buttons -->
+                <div class="modal-footer" style="background-color:#eee; border-radius:8px;">
+                    <button type="button" data-dismiss="modal" class="btn btn-primary">OK</button></div>
+            </div>
+        </div>
+    </div>
+	<!-- FOOTER -->
+	<footer>
+		<div class="container">
+			<hr class="ffooter">
+			<p class="pull-right">© {% now 'Y' %} Fleeg, FOSS.</p>
+		</div>
+	</footer>
+  </body>
+</html>

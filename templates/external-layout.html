@@ -1,0 +1,54 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
+        <link href="{% static 'libs/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet" media="screen">
+        <!-- scripts -->
+        <script src="{% static 'libs/jquery/jquery.js' %}"></script>
+        <script src="{% static 'libs/bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/fleeg.js' %}"></script>
+  </head>
+  <body style="margin-right:0;">
+	<!-- HEADER -->
+	<div class="nav-reaction">
+		<div class="navbar navbar-default navbar-static-top fnav">
+		  <div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="{% url 'index' %}">
+					[ADD LOGO HERE]
+				</a>
+			</div>
+			<div class="navbar-collapse collapse">
+			  <ul class="nav navbar-nav navbar-right">
+					<li class="dropdown fsign {% if form %}open{% endif %}">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="font-weight:900;">SIGN IN</a>
+						<ul class="dropdown-menu flogin">
+							<li>
+								{% include 'account/login.html' %}
+							</li>
+						</ul>	
+					</li>
+			  </ul>
+			</div>
+		  </div>
+		</div>
+	</div>
+    {% block content %}{% endblock %}
+	<!-- FOOTER -->		
+	<footer>
+		<div class="container">
+			<hr class="ffooter">
+			<p class="pull-right">
+				<a href="#" style="color: #222">Privacy policy</a> ·
+				<a href="#" style="color: #222">Terms of Use</a>
+			</p>
+			<p>© {% now 'Y' %} Fleeg, FOSS.</p>
+		</div>
+	</footer>
+  </body>
+</html>

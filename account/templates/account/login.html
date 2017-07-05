@@ -1,0 +1,17 @@
+<div>
+    <h4>Login</h4>
+
+    {% if form %}
+         <div id="flogin-alert" class="alert alert-warning" style="color:#222;">Authentication failed.
+             <strong>Try again.</strong></div>
+    {% endif %}
+    <form accept-charset="UTF-8" id="login-form" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        <input type="text" name="identity" id="identify" placeholder="Username or E-mail" value="{{ form.identity.value }}"
+               class="form-control flogin-input" style="margin-bottom: 15px;" required>
+        <input type="password" name="password" id="password" placeholder="Password" class="form-control flogin-input" required>
+        <input type="checkbox" value="True" id="keep" name="keep_connected" class="form-control" style="display:inline;margin:0;width:16px;">
+        <label for="keep" style="font-weight: 100; margin: 5px 0 15px 0; font-size:11px;"> Keep me connected in</label>
+        <input type="submit" value="Sign In" id="sign-in" class="btn btn-success btn-block">
+    </form>
+</div>

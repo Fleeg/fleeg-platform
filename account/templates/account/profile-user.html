@@ -1,0 +1,44 @@
+{% load staticfiles %}
+<div class="container well fprofile fprofile-header fprofile-wall" >
+    <div class="row">
+        <div class="span12">
+            <div class="fphoto"><img width="200px" class="img-thumbnail" src="{% static 'img/profile/default.jpg' %}"></div>
+            <div class="finfo">
+                <table class="table" style="margin-bottom:0;">
+                  <tbody>
+                    <tr>
+                        <td><h3 style="font-size:30px;">{{ profile.first_name }} {{ profile.last_name }}</h3></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="margin:5px 0 20px 0; font-size:16px;"><b>@{{ profile.username }}</b></p>
+                            {% if user.is_authenticated %}
+                            <div style="float:right;">
+                                {% if user != profile %}
+                                    {% if user.is_following %}
+                                        <form method="POST" action="{% url 'account_unfollow' profile.username %}">{% csrf_token %}
+                                        <button type="submit" id="btn-unfollow" class="btn btn-default btn-large"
+                                           style="font-size:16px; font-weight:900; padding: 7px 30px 7px 30px;">
+                                            <span style="font-size:12px;" class="glyphicon glyphicon-ok"></span> Following
+                                        </button>
+                                        </form>
+                                    {% else %}
+                                        <form method="POST" action="{% url 'account_follow' profile.username %}">{% csrf_token %}
+                                        <button type="submit" id="btn-follow" class="btn btn-primary btn-large"
+                                           style="font-size:16px; font-weight:900; padding: 7px 30px 7px 30px; 
+                                                        background-color: #47A447; border-color: #398439;">
+                                            <span style="font-size:12px;" class="glyphicon glyphicon-plus"></span> Follow
+                                        </button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

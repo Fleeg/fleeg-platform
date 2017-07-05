@@ -1,0 +1,56 @@
+<script>
+$(document).ready(function() {
+    {% if formSignUp %}
+    $('#signup').modal();
+    {% endif %}
+});
+</script>
+<!-- Modal -->
+<div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-hidden="true"
+     style="overflow:auto; {% if formSignUp %}display:block{% endif %}">
+    <div class="modal-dialog fdialog">
+        <div class="fsignup">
+            <div class="modal-body">
+                <div class="container" style="max-width:950px;">
+                    <div style="margin-bottom: 50px;">
+                        <h1 style="color:#666666;">Sign up to Fleeg</h1>
+                        <h4>
+                            By creating your <strong style="color:#666666;">Fleeg</strong> account you agree to our
+                            <a target="blank" href="#" style="color:#666666;">Terms of Use</a>	and
+                            <a target="blank" href="#" style="color:#666666;">Privacy Policy</a>.
+                        </h4>
+                    </div>
+                    <div style="padding: 0 20px; max-width:550px;">
+                        <p><strong>SIGN UP WITH EMAIL</strong></p>
+                        {% if formSignUp.errors %}
+                            <div id="fsignup-alert" class="alert alert-warning" style="color:#222;">
+                                <strong>Sing up failed.</strong> Verify information and try again.
+                            {{ formSignUp.errors }}
+                            </div>
+                        {% elif formSignUp %}
+                            <div id="fsignup-success" class="alert alert-success" style="color:#222;">
+                                <strong>Account is done.</strong>You can login right now.</div>
+                        {% endif %}
+                        <form id="signup-form" accept-charset="UTF-8" method="POST" action="{% url 'account_signup' %}">
+                            {% csrf_token %}
+                            <input type="text" name="first_name" id="firstName" value="{{ formSignUp.first_name.value }}"
+                                   placeholder="First Name" class="form-control fsignup-input" style="width:48%; float:left;" required>
+                            <input type="text" name="last_name" id="lastName" value="{{ formSignUp.last_name.value }}"
+                                   placeholder="Last Name" class="form-control fsignup-input" style="width:48%; display:inline-block; margin-left:4%;" required>
+                            <input type="text" name="username" id="username" value="{{ formSignUp.username.value }}"
+                                   placeholder="Username" class="form-control fsignup-input" required>
+                            <input type="text" name="email" id="email" value="{{ formSignUp.email.value }}"
+                                   placeholder="E-mail" class="form-control fsignup-input" required>
+                            <input type="password" name="password" id="password-signup" placeholder="Password" class="form-control fsignup-input" required>
+                            <input type="submit" value="Sign Up" class="btn btn-success btn-block fsignup-input">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+        <a class="btn btn-default" data-dismiss="modal" style="width:100%;border:0;border-radius:0; background-color:#333; color:#fff; font-size:30px;">
+            <span class="glyphicon glyphicon-chevron-up"></span><strong> Close </strong>
+        </a>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal -->

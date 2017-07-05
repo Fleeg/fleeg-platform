@@ -1,0 +1,44 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <meta charset="utf-8">
+        <title>Fleeg | Error</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
+        <link href="{% static 'libs/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet" media="screen">
+        <!-- scripts -->
+        <script src="{% static 'libs/jquery/jquery.js' %}"></script>
+        <script src="{% static 'libs/bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/fleeg.js' %}"></script>
+  </head>
+<body>
+<div class="container" style="padding:100px;">
+<div class="col-lg-5" style="margin-left:80px;">
+<a href="{% url 'index' %}">
+    <img src="{% static 'img/logo1.png' %}"/>
+</a>
+<h1><strong>404</strong> - That's an error.</h1>
+<p>What you were looking for is just not there.</p>
+<p><a href="{%  url 'index' %}">go to home</a></p>
+</div>
+<div class="col-lg-5">
+<img src="{% static 'img/icon_error.png' %}" style="width:400px;"/>
+</div>
+</div>
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <hr class="ffooter">
+        <p class="pull-right">
+            <a href="{% url 'about' %}">About</a> ·
+            <a href="{% url 'mobile' %}">Mobile</a> ·
+            <a href="{% url 'about' %}#privacy">Privacy</a> ·
+            <a href="{% url 'about' %}#terms">Terms</a>
+        </p>
+        <p>© {% now 'Y' %} Fleeg, FOSS.</p>
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% load staticfiles %}
+{% for post in posts %}
+<!-- published item -->
+<div class="item fwall-content">
+<div class="fpublished-item">
+    <div class="fspace-item">
+        <div class="fimage-publisher">
+            <img src="{% static 'img/profile/default.jpg' %}" class="img-circle fimg-circle" />
+        </div>
+        <div class="fname-publisher">
+            <div style="font-size:13px; font-weight: 900; width:300px;">
+                <a href="{% url 'profile' username=post.publisher.user.username %}" style="color:#000">
+                    {{ post.publisher.user.first_name }} {{ post.publisher.user.last_name }}
+                </a>
+            </div>
+            <div style="font-size:11px; color:#666; width:300px;">Published at {{ post.created_at }}</div>
+        </div>
+    </div>
+    <div class="fcontent-item">
+        {% if post.publisher != post.owner %}
+            <div class="fspace-item" style="font-size:12px; padding: 20px 10px 0 10px;" >
+                <a href="#" style="font-weight: 900; color:#000">
+                    {{ post.owner.user.first_name }} {{ post.owner.user.last_name }}
+                </a> originally shared:<hr style="margin:0; margin-top:10px;"/>
+            </div>
+        {% endif %}
+        <h4 class="fspace-item" style="padding-bottom:0; margin-bottom:2px;">
+            <a href="javascript:void(0)" onclick="openLink('{{ post.id }}', '{{ post.url }}')"
+               title="{{ post.title }}" style="color:#000;">{{ post.title|truncatechars:95 }}</a>
+        </h4>
+        <div class="url-link">{{ post.url|truncatechars:180 }}</div>
+        {% if post.image_url  %}
+        <div class="flink-img">
+            <img src="{{ post.image_url }}" style="width:100%;" />
+        </div>
+        {% endif %}
+        {% if post.summary %}
+        <div style="text-align: justify; font-size: 12px; padding: 20px 10px 10px 10px;">{{ post.summary }}</div>
+        {% endif %}
+        {% if post.tags %}
+        <div style="text-align: justify; padding: 20px 10px 10px 10px; font-size: 11px;">
+        <strong>Tags:</strong>
+        {% for tag in post.get_tags_as_list %}
+        <a href="#" style="text-decoration: underline; color: #222">{{ tag }}</a>
+        {% endfor %}
+        </div>
+        {% endif %}
+        <hr style="margin:0; margin-top:10px;"/>
+        <div class="fspace-item" style="font-size: 11px; padding:25px 15px;">
+            <a href="#info-modal" data-toggle="modal" style="color:#444;" onclick="fleeg_getAdditionsLink('{{ post.id }}');">
+                <strong>20</strong> Additions
+            </a>
+            <span style="color:#444;margin-right:5px;"><strong>20</strong> Views</span>
+            <div class="flink-options" style="float:right;">
+                <a href="javascript:void(0)" class="btn" title="Add" >
+                    <span class="glyphicon glyphicon-plus"></span> Add
+                </a>
+                <a href="javascript:void(0)" class="btn" title="Favorite">
+                    <span class="glyphicon glyphicon-star"></span>
+                </a>
+                <a href="javascript:void(0)" class="btn" title="View" onclick="openLink('{{ post.id }}', '{{ post.url }}')">
+                    <span class="glyphicon glyphicon-share-alt"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div><span>No items yet.</span></div>
+</div>
+{% endfor %}
