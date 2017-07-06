@@ -18,16 +18,16 @@
     <div class="nav-reaction" style="border-top:0">
 		<div class="navbar navbar-default navbar-fixed-top fnav">
             <div class="navbar-header" style="width:220px; margin: 5px 10px;">
-                <a class="navbar-brand" style="padding:0;" href="{% url 'home' %}">
-                    [ADD LOGO HERE]
-                </a>
+                <a class="navbar-brand flogo" style="color:#222222;max-width:135px;padding-top:15px;font-size:40px;" href="{% url 'home' %}">
+					<span class="flogo-icon-inline"></span>Fleeg
+				</a>
             </div>
             <div class="col-lg-5" style="margin-top:10px;">
                 <form onsubmit="return false;" id="form-search">
                 <div class="input-group">
                   <input type="text" class="form-control flogin-input" name="text-search" id="input-search" placeholder="What are you searching?">
                   <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" style="padding:5.5px 30px; background-color:#47A447; border-color: #398439;"
+                    <button class="btn btn-primary" type="button" style="padding:5.5px 30px; background-color:#468847; border-color: #398439;"
                          onclick="window.location.replace('/search?p='+$('#input-search').val());">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>

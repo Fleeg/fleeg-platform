@@ -2,6 +2,53 @@
 	Style specific to app
 */
 
+@font-face {
+    font-family: 'Kabel';
+    src: url('../fonts/kabel.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto Condensed';
+    src: url('../fonts/roboto-condensed.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto Condensed';
+    src: url('../fonts/roboto-boldcondensed.ttf');
+    font-weight: bold;
+}
+
+.flogo {
+	font-family: 'Roboto Condensed';
+	font-weight: bold;
+	font-size: 50px;
+	color: #222222;
+}
+
+.flogo-icon::before {
+    margin-bottom: 10px;
+	padding: 16px;
+	content: 'F';
+	font-family: 'Roboto Condensed';
+    font-weight: bold;
+	color: #FFFFFF;
+	background-color: #468847;
+	float: right;
+    border-radius: 5px;
+}
+
+.flogo-icon-inline::before {
+	margin-right: 10px;
+	padding: 0 13px;
+	content: 'F';
+	font-family: 'Roboto Condensed';
+    font-weight: bold;
+	color: #FFFFFF;
+	background-color: #468847;
+    border-radius: 5px;
+}
+
+
 /* navbar ext */
 .nav-reaction {
 	border-top: 4px solid #333333;
@@ -28,7 +75,7 @@
 
 .fnav .nav > .fsign > a {
 	font-weight: 600;
-	color: #47A447;
+	color: #468847;
 }
 
 .fnav .nav > .fsign > a:hover {
@@ -36,7 +83,7 @@
 }
 
 .fnav .nav > .fsign > a:focus {
-	background-color: #47A447;
+	background-color: #468847;
 	color: #FFFFFF;
 }
 
@@ -62,8 +109,8 @@
 
 /* login container */
 .flogin {
-	border-top: 2px solid #47A447;
-	border-bottom: 4px solid #47A447;
+	border-top: 2px solid #468847;
+	border-bottom: 4px solid #468847;
 	padding: 25px 15px 25px 15px;
 	width: 350px;
 }
@@ -105,8 +152,8 @@ footer{
 }
 
 .fsidenav .nav > .active > a, .fsidenav .nav > .active:hover > a, .fsidenav .nav > .active:focus > a {
-    border-left: 2px solid #47A447;
-    color: #47A447;
+    border-left: 2px solid #468847;
+    color: #468847;
     font-weight: bold;
 }
 
@@ -155,16 +202,16 @@ footer{
 }
 
 .fmenu-profile > li > a:hover , .fmenu-profile > li > a:focus {
-	border-bottom: 2px solid #47A447;
+	border-bottom: 2px solid #468847;
 	background: none;
 	margin-bottom: -2px;
 	color: #222222;
 }
 
 .fmenu-profile > .active, .fmenu-profile > li.active > a, .fmenu-profile > li.active > a:hover {
-	border-bottom: 2px solid #47A447;
+	border-bottom: 2px solid #468847;
 	margin-bottom: -1px;
-	background-color: #47A447;
+	background-color: #468847;
 }
 
 .fprofile-wall {
@@ -240,7 +287,7 @@ footer{
 }
 
 .flast-follow {
-	background-color:#47A447; 
+	background-color:#468847; 
 	border-color: #398439;  
 	color: #FFFFFF;
 	margin: 1px 5px 15px 5px;
@@ -277,7 +324,7 @@ footer{
 }
 
 .fcontent-item:hover .url-link {
-    color:#47A447;
+    color:#468847;
 }
 
 /* notifications */
