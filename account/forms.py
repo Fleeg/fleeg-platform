@@ -1,3 +1,4 @@
+import re
 from django import forms
 from django.contrib.auth.models import User
 
@@ -6,6 +7,13 @@ class SignUpForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'password',)
+        User._meta.get_field('email')._unique = True
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if not re.match(r'^[A-Za-z0-9]+$', username):
+            raise forms.ValidationError('Username does not allow special characters.')
+        return username
 
 
 class LoginForm(forms.Form):
