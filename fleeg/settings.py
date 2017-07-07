@@ -1,4 +1,5 @@
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -10,8 +11,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '@kih_p6c%p4f5)wz5z4y=pn$t5e=$7!89g6bg(r8-*s#er((bw'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECURITY WARNING: don't run with debug or testing turned on in production!
+DEBUG = True #'debug' in sys.argv
+TESTING = True #'test' in sys.argv
 
 ALLOWED_HOSTS = []
 
@@ -114,3 +116,17 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+if TESTING:
+    # ADD NOSE TO TEST AND COVERAGE APPS
+    INSTALLED_APPS.append('django_nose')
+    
+    # Use nose to run all tests
+    TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+    # Tell nose to measure coverage on the 'foo' and 'bar' apps
+    NOSE_ARGS = [
+        '--with-coverage',
+        '--cover-package=account,link',
+        '--cover-inclusive',
+    ]
