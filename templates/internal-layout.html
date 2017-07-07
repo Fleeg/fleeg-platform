@@ -6,11 +6,13 @@
         <title>{% block title %}{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
-        <link href="{% static 'libs/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link href="{% static 'css/style.css' %}" rel="stylesheet" media="screen">
         <!-- scripts -->
-        <script src="{% static 'libs/jquery/jquery.js' %}"></script>
-        <script src="{% static 'libs/bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="{% static 'js/fleeg.js' %}"></script>
   </head>
   <body style="margin-right:0;">
@@ -55,12 +57,11 @@
                           <strong style="color:#222;margin-right:20px;">{{ user.first_name }} {{ user.last_name }}</strong>
                       </a>
                       <ul class="dropdown-menu">
+                        <li><a href="{% url 'home' %}">Home</a></li>
                         <li><a href="{% url 'profile' username=user.username %}">Profile</a></li>
                         <li><a href="#">Settings</a></li>
                         <li class="divider"></li>
-                        <li>
-                            <a href="{% url 'account_logout' %}">Sign out</a>
-                        </li>
+                        <li><a href="{% url 'account_logout' %}">Sign out</a></li>
                       </ul>
                     </li>
                 </ul>

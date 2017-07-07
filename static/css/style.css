@@ -87,6 +87,38 @@
 	color: #FFFFFF;
 }
 
+menu {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	width: 220px;
+	height: 100%;
+	padding: 60px 0 0;
+	background: #222;
+	margin:0;
+}
+
+menu ul {
+	list-style: none;
+	padding: 0;
+}
+
+menu li a {
+	display: block;
+	border-bottom: 1px solid rgba(255,255,255,.3);
+	margin: 0 10px;
+	padding: 10px;
+	color: #FFF;
+	text-decoration: none;
+}
+
+menu li a:hover {
+	background: #FFF;
+	color: #222;
+	text-decoration: none;
+}
+
 /* singup container*/
 .fsignup{
 	background: none repeat scroll 0 0 #F3F5F8;
@@ -98,6 +130,7 @@
 .fdialog{
 	width: 100%;
 	padding-top:0;
+	margin-top: 0;
 }
 
 .fsignup-input{
@@ -250,11 +283,9 @@ footer{
 }
 
 /*wall*/
-
 .fwall-content {
 	width: 460px;
 	margin: 0 5px;
-	float: left;
 }
 
 .fpublished-item {
@@ -358,4 +389,9 @@ footer{
 
 .ffield-error:focus {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 6px #CE8483 !important;
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+	background-color: #468847;
+    color: #FFFFFF;
 }
