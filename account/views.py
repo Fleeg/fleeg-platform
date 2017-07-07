@@ -32,9 +32,9 @@ class AuthView:
             if form.is_valid():
                 data = form.data
                 if '@' in data['identity']:
-                    kwargs = {'email': data['identity']}
+                    kwargs = {'email': data['identity'].lower()}
                 else:
-                    kwargs = {'username': data['identity']}
+                    kwargs = {'username': data['identity'].lower()}
                 try:
                     user = User.objects.get(**kwargs)
                     if user is not None and user.check_password(data['password']):
