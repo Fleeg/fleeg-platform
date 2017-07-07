@@ -87,6 +87,38 @@
 	color: #FFFFFF;
 }
 
+menu {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	width: 220px;
+	height: 100%;
+	padding: 60px 0 0;
+	background: #222;
+	margin:0;
+}
+
+menu ul {
+	list-style: none;
+	padding: 0;
+}
+
+menu li a {
+	display: block;
+	border-bottom: 1px solid rgba(255,255,255,.3);
+	margin: 0 10px;
+	padding: 10px;
+	color: #FFF;
+	text-decoration: none;
+}
+
+menu li a:hover {
+	background: #FFF;
+	color: #222;
+	text-decoration: none;
+}
+
 /* singup container*/
 .fsignup{
 	background: none repeat scroll 0 0 #F3F5F8;

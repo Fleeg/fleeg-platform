@@ -1,7 +1,18 @@
 {% extends "internal-layout.html" %}
 {% block title %}Fleeg | {{ user.first_name }} {{ user.last_name }}{% endblock %}
 {% block content %}
-{% include 'menu.html' %}
+<!-- SIDE MENU -->
+<menu>
+    <ul>
+        <li><a href="{% url 'home' %}">Feed</a></li>
+        <li><a href="{% url 'profile' username=user.username %}">Profile</a></li>
+        <li><a href="#">My Links</a></li>
+        <li><a href="#">Added Links</a></li>
+        <li><a href="#">Followers(200)</a></li>
+        <li><a href="#">Following(250)</a></li>
+        <li><a href="#">Search</a></li>
+    </ul>
+</menu>
 <!-- CONTENT -->
 <div class="container fhome-wall" style="margin-top:70px;">
     {% include 'link/link_new.html' %}
