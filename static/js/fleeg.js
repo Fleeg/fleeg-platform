@@ -1,8 +1,3 @@
-// links on posts
-function openLink(link, url) {
-    window.open(url, '_blank');
-}
-
 // profile menu
 function highlightProfileMenu() {
     name = window.location.pathname.split('/').pop();

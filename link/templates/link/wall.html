@@ -25,8 +25,9 @@
             </div>
         {% endif %}
         <h4 class="fspace-item" style="padding-bottom:0; margin-bottom:2px;">
-            <a href="javascript:void(0)" onclick="openLink('{{ post.id }}', '{{ post.url }}')"
-               title="{{ post.title }}" style="color:#000;">{{ post.title|truncatechars:95 }}</a>
+            <a href="{{ post.url }}" target="_blank" title="{{ post.title }}" style="color:#000;">
+                {{ post.title|truncatechars:95 }}
+            </a>
         </h4>
         <div class="url-link">{{ post.url|truncatechars:180 }}</div>
         {% if post.image_url  %}
@@ -47,7 +48,7 @@
         {% endif %}
         <hr style="margin:0; margin-top:10px;"/>
         <div class="fspace-item" style="font-size: 11px; padding:25px 15px;">
-            <a href="#info-modal" data-toggle="modal" style="color:#444;" onclick="fleeg_getAdditionsLink('{{ post.id }}');">
+            <a href="#info-modal" data-toggle="modal" style="color:#444;">
                 <strong>20</strong> Additions
             </a>
             <span style="color:#444;margin-right:5px;"><strong>20</strong> Views</span>
@@ -58,7 +59,7 @@
                 <a href="javascript:void(0)" class="btn" title="Favorite">
                     <span class="glyphicon glyphicon-star"></span>
                 </a>
-                <a href="javascript:void(0)" class="btn" title="View" onclick="openLink('{{ post.id }}', '{{ post.url }}')">
+                <a href="{{ post.url }}" target="_blank" class="btn"  title="View">
                     <span class="glyphicon glyphicon-share-alt"></span>
                 </a>
             </div>
