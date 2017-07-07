@@ -251,11 +251,9 @@ footer{
 }
 
 /*wall*/
-
 .fwall-content {
 	width: 460px;
 	margin: 0 5px;
-	float: left;
 }
 
 .fpublished-item {
