@@ -1,6 +1,14 @@
 language: python
+
 python:
-  - "3.6"
-install: "pip install -r requirements"
-# command to run tests
-script: python manage.py test
+  - 3.6
+
+install: 
+  - pip install codecov
+  - pip install -r requirements
+
+script: 
+  - python manage.py test
+
+after_success:
+  - codecov
