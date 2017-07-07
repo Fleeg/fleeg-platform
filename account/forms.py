@@ -13,7 +13,11 @@ class SignUpForm(forms.ModelForm):
         username = self.cleaned_data['username']
         if not re.match(r'^[A-Za-z0-9]+$', username):
             raise forms.ValidationError('Username does not allow special characters.')
-        return username
+        return username.lower()
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        return email.lower()
 
 
 class LoginForm(forms.Form):
