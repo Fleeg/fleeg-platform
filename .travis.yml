@@ -3,12 +3,17 @@ language: python
 python:
   - 3.6
 
-install: 
+install:
   - pip install codecov
   - pip install -r requirements
 
-script: 
+script:
   - python manage.py test
 
 after_success:
   - codecov
+
+notifications:
+  slack:
+    secure: VSWqg8r2D4nFQLa+47hxmpUiT+/c+MM/aQdKvl6LhRUCHvnBZXKuXILODvZlsjsWR+TBoMx/r5RgFJrdNOai80MSe/cweLor3GO8G9NsS4f9hSijy2ObpE0gCh79OReZMoXCzU8qX8FeUIoY2rICjABcKm23xuooZaDS7jZoNbaOCOKMqQxRFNfZI/o97Y9Wn0VPrj6qAtxNj145hIAMGAOOynqlm5OICGMqiagdYocDXCcme2yPWXX16GYeZwWbEs1u3QqDn89NakkyAln6Xbm/1Cyw2xWKYDUqLN2+iRxhmVXz+GhOOk4SXg0+yuw0M5xlxo2wk637OJUdFW/Le4CIu9KhODqkSR6uvwBtfxrtSJlllCFCw7GF6aCrUndWaKN3RsBnehgDhPJLoBnt6mJTJ/19IPYHEqT+4MTvPt366v2Dg2gK1Ws4rD9Z8Wf95f+CUX4Vu2CzaOddHT7o3noz6WoDSRtBTBCJsVxL9qzaKgkZ9Shv/NqmtJzn/uYtgAEfi9YX+Yx02FulVwdGMJRkwPE37b+imiH0ZPoEVCbGk9IkhKbPfNglMkQXG8BMGKW9ihDgRtxD3fJdwS531N9tqIKyKiNsgip8j1VOs9U+ZyONqly2I8InjZrfWQe7hNEHabnslEluVePIbilT7xa9z2ZtxUeLMq5hyKrJDEM=
+  email: false
