@@ -5,7 +5,7 @@ python:
 
 install:
   - pip install codecov
-  - pip install -r requirements
+  - pip install -r devRequirements
 
 script:
   - python manage.py test
