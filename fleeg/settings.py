@@ -128,6 +128,7 @@ if TESTING:
     # Tell nose to measure coverage on the 'foo' and 'bar' apps
     NOSE_ARGS = [
         '--with-coverage',
-        '--cover-package=account,link',
+        '--cover-package=common,account,link',
         '--cover-inclusive',
+        '--cover-html',
     ]
