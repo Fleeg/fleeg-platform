@@ -42,32 +42,42 @@ class TestAccounts(TestCase):
                                                                     'keep_connected': True})
         self.assertRedirects(response, reverse('home'))
 
-    def test_login_fail_user_not_exists(self):
+    def test_login_fails_user_not_exists(self):
         response = self.client.post(reverse('account_login'), data={'identity': 'invaliduser',
                                                                     'password': 'invalidpassword'})
         self.assertTemplateUsed(response, 'index.html', 'Authentication failed.')
+    
+    def test_login_fails_user_and_password_required(self):
+        response = self.client.post(reverse('account_login'), data={})
+        self.assertFormError(response, 'form', 'identity', 'This field is required.')
+        self.assertFormError(response, 'form', 'password', 'This field is required.')
+    
+    def test_signup_with_success(self):
+        new_user = AccountFactory.build().user
+        
+        form_data = {
+            'first_name': new_user.first_name,
+            'last_name': new_user.last_name,
+            'username': new_user.username,
+            'email': new_user.email,
+            'password': DEFAULT_PASSWORD,
+        }
 
-    @unittest.skip('Skip until coverage process to be added to project')
-    def test_call_view_loads(self):
-        self.client.login(username='user', password='test')
-        response = self.client.get('/url/to/view')
+        response = self.client.post(reverse('account_signup'), data=form_data)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'conversation.html')
+        self.assertTrue(response.context['formSignUp'].is_valid())
+    
+    def test_signup_fails_username_with_special_character(self):
+        new_user = AccountFactory.build().user
+        username_special_char = new_user.username + '/'
+        
+        form_data = {
+            'first_name': new_user.first_name,
+            'last_name': new_user.last_name,
+            'username': username_special_char,
+            'email': new_user.email,
+            'password': DEFAULT_PASSWORD,
+        }
 
-    @unittest.skip('Skip until coverage process to be added to project')
-    def test_call_view_fails_blank(self):
-        self.client.login(username='user', password='test')
-        response = self.client.post('/url/to/view', {})  # blank data dictionary
-        self.assertFormError(response, 'form', 'some_field', 'This field is required.')
-        # etc. ...
-
-    @unittest.skip('Skip until coverage process to be added to project')
-    def test_call_view_fails_invalid(self):
-        # as above, but with invalid rather than blank data in dictionary
-        self.assertTrue(True)
-
-    @unittest.skip('Skip until coverage process to be added to project')
-    def test_call_view_success_valid(self):
-        self.client.login(username='user', password='test')
-        response = self.client.post('/url/to/view', {})  # same again, but with valid data, then
-        self.assertRedirects(response, '/contact/1/calls/')
+        response = self.client.post(reverse('account_signup'), data=form_data)
+        self.assertFormError(response, 'formSignUp', 'username', 'Username does not allow special characters.')

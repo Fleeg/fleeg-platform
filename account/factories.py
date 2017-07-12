@@ -14,6 +14,8 @@ class UserFactory(factory.DjangoModelFactory):
     username = factory.sequence(lambda n: 'user{}'.format(n))
     email = factory.lazy_attribute(lambda n: '{}@test.com'.format(n.username.lower()))
     password = factory.PostGenerationMethodCall('set_password', DEFAULT_PASSWORD)
+    first_name = factory.sequence(lambda n: 'First User Name {}'.format(n))
+    last_name = factory.sequence(lambda n: 'Last User Name {}'.format(n))
 
 
 class AccountFactory(factory.DjangoModelFactory):
