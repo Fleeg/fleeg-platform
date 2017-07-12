@@ -1,5 +1,4 @@
 import unittest
-import copy
 
 from django.test import TestCase
 from django.core.urlresolvers import reverse
@@ -18,22 +17,39 @@ class TestAccounts(TestCase):
                                                              reverse('account_logout')))
 
     def test_logout_with_logged_in(self):
-        session = self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.get(reverse('account_logout'))
         self.assertRedirects(response, reverse('index'))
 
-    @unittest.skip('Skip until coverage process to be added to project')
-    def test_call_view_denies_anonymous(self):
-        response = self.client.get('/url/to/view', follow=True)
-        self.assertRedirects(response, '/login/')
-        response = self.client.post('/url/to/view', follow=True)
-        self.assertRedirects(response, '/login/')  # check what is the best for these three options...
-        self.assertRedirects(response, reverse('login'))
-        self.assertRedirects(response, 'link.views.login')
+    def test_redirect_home_logged_in(self):
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.get(reverse('index'))
+        self.assertRedirects(response, reverse('home'))
+
+    def test_login_with_username_success(self):
+        response = self.client.post(reverse('account_login'), data={'identity': self.user.username,
+                                                                    'password': DEFAULT_PASSWORD})
+        self.assertRedirects(response, reverse('home'))
+
+    def test_login_with_email_success(self):
+        response = self.client.post(reverse('account_login'), data={'identity': self.user.email,
+                                                                    'password': DEFAULT_PASSWORD})
+        self.assertRedirects(response, reverse('home'))
+
+    def test_login_with_keep_connected(self):
+        response = self.client.post(reverse('account_login'), data={'identity': self.user.username,
+                                                                    'password': DEFAULT_PASSWORD,
+                                                                    'keep_connected': True})
+        self.assertRedirects(response, reverse('home'))
+
+    def test_login_fail_user_not_exists(self):
+        response = self.client.post(reverse('account_login'), data={'identity': 'invaliduser',
+                                                                    'password': 'invalidpassword'})
+        self.assertTemplateUsed(response, 'index.html', 'Authentication failed.')
 
     @unittest.skip('Skip until coverage process to be added to project')
     def test_call_view_loads(self):
-        self.client.login(username='user', password='test')  # defined in fixture or with factory in setUp()
+        self.client.login(username='user', password='test')
         response = self.client.get('/url/to/view')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'conversation.html')
