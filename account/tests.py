@@ -6,11 +6,16 @@ from django.core.urlresolvers import reverse
 from account.factories import AccountFactory, RelationshipFactory, DEFAULT_PASSWORD
 
 
-class TestAccounts(TestCase):
+class TestAccount(TestCase):
     def setUp(self):
         new_user = AccountFactory.build().user
         self.account = AccountFactory.create()
         self.user = self.account.user
+        self.form_login = {
+            'identity': self.user.username,
+            'password': DEFAULT_PASSWORD,
+            'keep_connected': False,
+        }
         self.form_user = {
             'first_name': new_user.first_name,
             'last_name': new_user.last_name,
@@ -35,25 +40,25 @@ class TestAccounts(TestCase):
         self.assertRedirects(response, reverse('home'))
 
     def test_login_with_username_success(self):
-        response = self.client.post(reverse('account_login'), data={'identity': self.user.username,
-                                                                    'password': DEFAULT_PASSWORD})
+        response = self.client.post(reverse('account_login'), data=self.form_login)
         self.assertRedirects(response, reverse('home'))
 
     def test_login_with_email_success(self):
-        email_upper = self.user.email.upper()
-        response = self.client.post(reverse('account_login'), data={'identity': email_upper,
-                                                                    'password': DEFAULT_PASSWORD})
+        self.form_login['email'] = self.user.email.upper()
+        response = self.client.post(reverse('account_login'), data=self.form_login)
         self.assertRedirects(response, reverse('home'))
 
     def test_login_with_keep_connected(self):
-        response = self.client.post(reverse('account_login'), data={'identity': self.user.username,
-                                                                    'password': DEFAULT_PASSWORD,
-                                                                    'keep_connected': True})
+        self.form_login['keep_connected'] = True
+        response = self.client.post(reverse('account_login'), data=self.form_login)
         self.assertRedirects(response, reverse('home'))
 
     def test_login_fails_user_not_exists(self):
-        response = self.client.post(reverse('account_login'), data={'identity': 'invalid',
-                                                                    'password': 'invalid'})
+        invalid_login = {
+            'identity': 'invalid',
+            'password': 'invalid',
+        }
+        response = self.client.post(reverse('account_login'), data=invalid_login)
         self.assertTemplateUsed(response, 'index.html', 'Authentication failed.')
     
     def test_login_fails_identity_and_password_empty(self):
