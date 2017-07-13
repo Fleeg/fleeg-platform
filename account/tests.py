@@ -1,35 +1,132 @@
 import unittest
+
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
+from account.factories import AccountFactory, RelationshipFactory, DEFAULT_PASSWORD
 
-@unittest.skip('Skip until coverage process to be added to project')
-class TestCalls(TestCase):
-    def test_call_view_denies_anonymous(self):
-        response = self.client.get('/url/to/view', follow=True)
-        self.assertRedirects(response, '/login/')
-        response = self.client.post('/url/to/view', follow=True)
-        self.assertRedirects(response, '/login/')  # check what is the best for these three options...
-        self.assertRedirects(response, reverse('login'))
-        self.assertRedirects(response, 'link.views.login')
 
-    def test_call_view_loads(self):
-        self.client.login(username='user', password='test')  # defined in fixture or with factory in setUp()
-        response = self.client.get('/url/to/view')
+class TestAccounts(TestCase):
+    def setUp(self):
+        new_user = AccountFactory.build().user
+        self.account = AccountFactory.create()
+        self.user = self.account.user
+        self.form_user = {
+            'first_name': new_user.first_name,
+            'last_name': new_user.last_name,
+            'username': new_user.username,
+            'email': new_user.email,
+            'password': DEFAULT_PASSWORD,
+        }
+
+    def test_logout_without_logged_in(self):
+        response = self.client.get(reverse('account_logout'))
+        self.assertRedirects(response, '{0}?next={1}'.format(reverse('account_login'),
+                                                             reverse('account_logout')))
+
+    def test_logout_with_logged_in(self):
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.get(reverse('account_logout'))
+        self.assertRedirects(response, reverse('index'))
+
+    def test_redirect_home_logged_in(self):
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.get(reverse('index'))
+        self.assertRedirects(response, reverse('home'))
+
+    def test_login_with_username_success(self):
+        response = self.client.post(reverse('account_login'), data={'identity': self.user.username,
+                                                                    'password': DEFAULT_PASSWORD})
+        self.assertRedirects(response, reverse('home'))
+
+    def test_login_with_email_success(self):
+        email_upper = self.user.email.upper()
+        response = self.client.post(reverse('account_login'), data={'identity': email_upper,
+                                                                    'password': DEFAULT_PASSWORD})
+        self.assertRedirects(response, reverse('home'))
+
+    def test_login_with_keep_connected(self):
+        response = self.client.post(reverse('account_login'), data={'identity': self.user.username,
+                                                                    'password': DEFAULT_PASSWORD,
+                                                                    'keep_connected': True})
+        self.assertRedirects(response, reverse('home'))
+
+    def test_login_fails_user_not_exists(self):
+        response = self.client.post(reverse('account_login'), data={'identity': 'invalid',
+                                                                    'password': 'invalid'})
+        self.assertTemplateUsed(response, 'index.html', 'Authentication failed.')
+    
+    def test_login_fails_identity_and_password_empty(self):
+        response = self.client.post(reverse('account_login'), data={})
+        self.assertFormError(response, 'form', 'identity', 'This field is required.')
+        self.assertFormError(response, 'form', 'password', 'This field is required.')
+    
+    def test_signup_with_success(self):
+        response = self.client.post(reverse('account_signup'), data=self.form_user)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'conversation.html')
+        self.assertTrue(response.context['formSignUp'].is_valid())
+    
+    def test_signup_fails_username_with_special_character(self):
+        username_special_char = self.form_user['username'] + '/'
+        self.form_user['username'] = username_special_char
+        response = self.client.post(reverse('account_signup'), data=self.form_user)
+        self.assertFormError(response, 'formSignUp', 'username',
+                             'Username does not allow special characters.')
 
-    def test_call_view_fails_blank(self):
-        self.client.login(username='user', password='test')
-        response = self.client.post('/url/to/view', {})  # blank data dictionary
-        self.assertFormError(response, 'form', 'some_field', 'This field is required.')
-        # etc. ...
+    def test_signup_fails_with_empty_form(self):
+        response = self.client.post(reverse('account_signup'), data={})
+        self.assertFormError(response, 'formSignUp', 'email', 'This field is required.')
+        self.assertFormError(response, 'formSignUp', 'password', 'This field is required.')
+        self.assertFormError(response, 'formSignUp', 'username', 'This field is required.')
+        self.assertFormError(response, 'formSignUp', 'first_name', 'This field is required.')
+        self.assertFormError(response, 'formSignUp', 'last_name', 'This field is required.')
 
-    def test_call_view_fails_invalid(self):
-        # as above, but with invalid rather than blank data in dictionary
-        self.assertTrue(True)
+    def test_access_profile_anonymous(self):
+        response = self.client.get(reverse('profile', args=[self.user.username]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'profile.html')
 
-    def test_call_view_success_valid(self):
-        self.client.login(username='user', password='test')
-        response = self.client.post('/url/to/view', {})  # same again, but with valid data, then
-        self.assertRedirects(response, '/contact/1/calls/')
+    def test_access_profile_logged_in(self):
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.get(reverse('profile', args=[self.user.username]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'profile.html')
+
+    def test_access_profile_user_not_found(self):
+        response = self.client.get(reverse('profile', args=['notfound']))
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_following_anonymous(self):
+        response = self.client.get(reverse('following', args=[self.user.username]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'account/user.html')
+
+    def test_get_following_logged_in(self):
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.get(reverse('following', args=[self.user.username]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'account/user.html')
+
+    def test_get_followers_anonymous(self):
+        response = self.client.get(reverse('followers', args=[self.user.username]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'account/user.html')
+
+    def test_get_followers_logged_in(self):
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.get(reverse('followers', args=[self.user.username]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'account/user.html')
+
+    def test_follow_other_user(self):
+        user2 = AccountFactory.create().user
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('account_follow', args=[user2.username]))
+        self.assertRedirects(response, reverse('profile', args=[user2.username]))
+
+    def test_unfollow_following_user(self):
+        account2 = AccountFactory.create()
+        RelationshipFactory.create(owner=self.account, follow=account2)
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('account_unfollow', args=[account2.user.username]))
+        self.assertRedirects(response, reverse('profile', args=[account2.user.username]))
