@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Account, Relationship
+from account.models import Account, Relationship
 
 
 admin.site.register(Account)
