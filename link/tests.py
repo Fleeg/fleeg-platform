@@ -2,15 +2,16 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 
 from account.factories import AccountFactory, DEFAULT_PASSWORD
+from link.factories import PostFactory
 
 
 class TestLink(TestCase):
     def setUp(self):
-        account = AccountFactory.create()
-        new_link = {
-            'url': '',
-        }
-        self.user = account.user
+        self.account = AccountFactory.create()
+        self.user = self.account.user
+        posts = []
+        for n in range(2):
+            posts.append(PostFactory.create(owner=self.account, publisher=self.account))
 
     def test_access_links_anonymous(self):
         response = self.client.get(reverse('links', args=[self.user.username]))
@@ -28,17 +29,23 @@ class TestLink(TestCase):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
+        self.assertTrue(response.context['posts'].count())
 
     def test_post_new_link_fails_url_empty(self):
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={})
         self.assertFormError(response, 'form', 'url', 'This field is required.')
 
-    # test a private link
+    def test_post_new_fails_invalid_link(self):
+        url_post = 'http://test.fleeg/test-invalid@'
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('link_new'), data={'url': url_post})
+        self.assertFormError(response, 'form', None, 'Failed to read link.')
 
     def test_post_new_link_success(self):
+        url_post = 'https://google.com'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
-        response = self.client.post(reverse('link_new'), data={'url': 'https://google.com'})
+        response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertRedirects(response, reverse('home'))
 
     def test_post_new_link_image_success(self):
@@ -46,10 +53,12 @@ class TestLink(TestCase):
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': img_url})
         self.assertRedirects(response, reverse('home'))
+        self.assertEqual(self.account.posts.all().count(), 3)
 
-    def test_post_new_link_image_success(self):
-        url_post = 'https://medium.com/@lucasboscaini/share-data-between-modules-and-components'
-        url_post + '-with-angularjs-56d320a19b6f'
+    def test_post_new_link_news_success(self):
+        url_post = 'http://edition.cnn.com/2015/04/09/entertainment/'
+        url_post += 'feat-monty-python-holy-grail-40-years/index.html'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertRedirects(response, reverse('home'))
+        self.assertEqual(self.account.posts.all().count(), 3)

@@ -42,7 +42,7 @@ class TestAccount(TestCase):
         self.assertRedirects(response, reverse('home'))
 
     def test_login_with_email_success(self):
-        self.form_login['email'] = self.user.email.upper()
+        self.form_login['identity'] = self.user.email.upper()
         response = self.client.post(reverse('account_login'), data=self.form_login)
         self.assertRedirects(response, reverse('home'))
 

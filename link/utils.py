@@ -9,6 +9,10 @@ from bs4 import BeautifulSoup
 from newspaper import Article
 
 
+class LinkException(Exception):
+    pass
+
+
 def get_page_info(url):
     page = Article(url)
     page_og = OpenGraph()
@@ -21,7 +25,11 @@ def get_page_info(url):
             'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.2 '
                           '(KHTML, like Gecko) Chrome/15.0.874.121 Safari/535.2',
         }
-        return requests.head(url, headers=headers).headers
+        try:
+            resp_headers = requests.head(url, headers=headers).headers
+        except requests.exceptions.RequestException:
+            raise LinkException('Failed to read link.')
+        return resp_headers
 
     def get_title_from_url():
         name_url = splitext(basename(urlsplit(url).path))[0]

@@ -10,6 +10,12 @@ class PostFactory(factory.DjangoModelFactory):
 
     owner = factory.SubFactory(AccountFactory)
     publisher = factory.SubFactory(AccountFactory)
+    url = 'http://test.tst'
+    type = 'html'
+    title = factory.sequence(lambda n: 'Title Link Test {}'.format(n))
+    summary = factory.sequence(lambda n: 'Summary Link Test {}'.format(n))
+    text = factory.sequence(lambda n: 'Summary Link Test {}'.format(n))
+    image_url = factory.sequence(lambda n: 'Summary Link Test {}'.format(n))
 
 
 class CommentFactory(factory.DjangoModelFactory):
