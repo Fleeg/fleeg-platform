@@ -1,3 +1,6 @@
+import requests
+
+from unittest.mock import patch
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
@@ -9,9 +12,7 @@ class TestLink(TestCase):
     def setUp(self):
         self.account = AccountFactory.create()
         self.user = self.account.user
-        posts = []
-        for n in range(2):
-            posts.append(PostFactory.create(owner=self.account, publisher=self.account))
+        [PostFactory.create(owner=self.account, publisher=self.account) for _ in range(2)]
 
     def test_access_links_anonymous(self):
         response = self.client.get(reverse('links', args=[self.user.username]))
@@ -36,8 +37,10 @@ class TestLink(TestCase):
         response = self.client.post(reverse('link_new'), data={})
         self.assertFormError(response, 'form', 'url', 'This field is required.')
 
-    def test_post_new_fails_invalid_link(self):
-        url_post = 'http://test.fleeg/test-invalid@'
+    @patch('link.utils.requests.head')
+    def test_post_new_fails_invalid_link(self, mock_req):
+        mock_req.side_effect = requests.exceptions.RequestException
+        url_post = 'http://test.fleeg/invalid-link'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertFormError(response, 'form', None, 'Failed to read link.')
@@ -48,8 +51,10 @@ class TestLink(TestCase):
         response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertRedirects(response, reverse('home'))
 
-    def test_post_new_link_image_success(self):
-        img_url = 'http://pudim.com.br/pudim.jpg'
+    @patch('link.utils.requests.head')
+    def test_post_new_link_image_success(self, mock_req):
+        mock_req.return_value.headers = {'Content-Type': 'image/jpg'}
+        img_url = 'https://test.fleeg/valid-image-link'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': img_url})
         self.assertRedirects(response, reverse('home'))
