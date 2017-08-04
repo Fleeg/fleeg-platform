@@ -1,3 +1,4 @@
+from unittest.mock import patch
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
@@ -9,9 +10,7 @@ class TestLink(TestCase):
     def setUp(self):
         self.account = AccountFactory.create()
         self.user = self.account.user
-        posts = []
-        for n in range(2):
-            posts.append(PostFactory.create(owner=self.account, publisher=self.account))
+        [PostFactory.create(owner=self.account, publisher=self.account) for _ in range(2)]
 
     def test_access_links_anonymous(self):
         response = self.client.get(reverse('links', args=[self.user.username]))
@@ -36,7 +35,9 @@ class TestLink(TestCase):
         response = self.client.post(reverse('link_new'), data={})
         self.assertFormError(response, 'form', 'url', 'This field is required.')
 
+    #@patch('resquests.head')
     def test_post_new_fails_invalid_link(self):
+        #mock_head.ok = False
         url_post = 'http://test.fleeg/test-invalid@'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': url_post})
