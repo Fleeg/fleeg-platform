@@ -1,3 +1,5 @@
+import requests
+
 from unittest.mock import patch
 from django.test import TestCase
 from django.core.urlresolvers import reverse
@@ -35,10 +37,10 @@ class TestLink(TestCase):
         response = self.client.post(reverse('link_new'), data={})
         self.assertFormError(response, 'form', 'url', 'This field is required.')
 
-    #@patch('resquests.head')
-    def test_post_new_fails_invalid_link(self):
-        #mock_head.ok = False
-        url_post = 'http://test.fleeg/test-invalid@'
+    @patch('link.utils.requests.head')
+    def test_post_new_fails_invalid_link(self, mock_req):
+        mock_req.side_effect = requests.exceptions.RequestException
+        url_post = 'http://test.fleeg/invalid-link'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertFormError(response, 'form', None, 'Failed to read link.')
@@ -49,8 +51,10 @@ class TestLink(TestCase):
         response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertRedirects(response, reverse('home'))
 
-    def test_post_new_link_image_success(self):
-        img_url = 'http://pudim.com.br/pudim.jpg'
+    @patch('link.utils.requests.head')
+    def test_post_new_link_image_success(self, mock_req):
+        mock_req.return_value.headers = {'Content-Type': 'image/jpg'}
+        img_url = 'https://test.fleeg/valid-image-link'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': img_url})
         self.assertRedirects(response, reverse('home'))
