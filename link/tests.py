@@ -58,7 +58,7 @@ class TestLink(TestCase):
         mock_article.return_value.meta_description = None
         mock_article.return_value.publish_date = None
 
-        url_post = 'https://google.com'
+        url_post = 'https://test.fleeg/valid-link'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertRedirects(response, reverse('home'))
@@ -73,9 +73,34 @@ class TestLink(TestCase):
         self.assertRedirects(response, reverse('home'))
         self.assertEqual(self.account.posts.all().count(), 3)
 
-    def test_post_new_link_news_success(self):
-        url_post = 'http://edition.cnn.com/2015/04/09/entertainment/'
-        url_post += 'feat-monty-python-holy-grail-40-years/index.html'
+    @patch('link.utils.requests.head')
+    @patch('link.utils.Article')
+    def test_post_new_link_news_success(self, mock_article, mock_req):
+        html = '''
+            <html>
+            <head>
+            <meta content="2015-04-09T10:25:24Z" property="og:pubdate"/>
+            <meta content="http://www.cnn.com/2015/04/09/entertainment/feat-monty-python-holy-grail-40-years/index.html"
+            property="og:url"/>
+            <meta content="40 years of 'Holy Grail': The best of Monty Python - CNN" property="og:title"/>
+            <meta content='"Monty Python and the Holy Grail," premiered 40 years ago. The timing was right for the 
+            British comedians (along with their token American, Terry Gilliam). ' property="og:description"/>
+            <meta content="CNN" property="og:site_name"/>
+            <meta content="article" property="og:type"/>
+            <meta content="http://i2.cdn.cnn.com/cnnnext/dam/assets/150407084310-01-monty-python-super-169.jpg" 
+            property="og:image"/>
+            <meta content="1100" property="og:image:width"/>
+            <meta content="619" property="og:image:height"/>
+            </head>
+            </html>
+        '''
+
+        mock_req.return_value.headers = {'Content-Type': 'text/html'}
+        mock_article.return_value.html = html
+        mock_article.return_value.text = html
+        mock_article.return_value.publish_date = None
+
+        url_post = 'http://test.fleeg/valid-og-link'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertRedirects(response, reverse('home'))
