@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('update_at', models.DateTimeField(auto_now=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='accounts', to=settings.AUTH_USER_MODEL)),
             ],
         ),
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('update_at', models.DateTimeField(auto_now=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
                 ('follow', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='following', to='account.Account')),
                 ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='followers', to='account.Account')),
             ],
