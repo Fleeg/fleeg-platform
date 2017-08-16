@@ -17,8 +17,6 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def set_metadata(self):
-        if not self.url:
-            raise AttributeError('No value to URL attribute')
         page_info = utils.get_page_info(self.url)
         self.type = page_info['type']
         self.title = page_info['title']

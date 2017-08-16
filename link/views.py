@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from link.forms import URLForm
+
 from account.models import Account
+from link.utils import LinkException
+from link.forms import URLForm
 from link.models import Post
 
 
@@ -27,9 +29,12 @@ class LinkView:
                 link = form.save(commit=False)
                 link.owner = Account.get_by_user(request.user)
                 link.publisher = Account.get_by_user(request.user)
-                link.set_metadata()
-                link.save()
-                return redirect('home')
+                try:
+                    link.set_metadata()
+                    link.save()
+                    return redirect('home')
+                except LinkException as e:
+                    form.add_error(None, e)
         return render(request, 'home.html', {'form': form})
 
     @staticmethod
