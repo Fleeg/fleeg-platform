@@ -9,10 +9,6 @@ from bs4 import BeautifulSoup
 from newspaper import Article
 
 
-class LinkException(Exception):
-    pass
-
-
 def get_page_info(url):
     page = Article(url)
     page_og = OpenGraph()
@@ -25,6 +21,7 @@ def get_page_info(url):
             'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.2 '
                           '(KHTML, like Gecko) Chrome/15.0.874.121 Safari/535.2',
         }
+
         try:
             resp_headers = requests.head(url, headers=headers).headers
         except requests.exceptions.RequestException:
@@ -49,12 +46,15 @@ def get_page_info(url):
     if page_type == 'image':
         image_url = url
         global_type = page_type
+
     if page_type == 'text':
         page.download()
         page_content = page.html
+
         if page_subtype == 'html':
             page_og = OpenGraph(html=page_content)
             page.parse()
+
     page_text = page.text or page_content
 
     return {
@@ -97,3 +97,7 @@ class OpenGraph:
         for og in ogs:
             if og.has_attr('content'):
                 self.__data__[og['property'][3:]] = og['content']
+
+
+class LinkException(Exception):
+    pass

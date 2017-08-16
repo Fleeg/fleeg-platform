@@ -40,12 +40,24 @@ class TestLink(TestCase):
     @patch('link.utils.requests.head')
     def test_post_new_fails_invalid_link(self, mock_req):
         mock_req.side_effect = requests.exceptions.RequestException
+
         url_post = 'http://test.fleeg/invalid-link'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertFormError(response, 'form', None, 'Failed to read link.')
 
-    def test_post_new_link_success(self):
+    @patch('link.utils.requests.head')
+    @patch('link.utils.Article')
+    def test_post_new_link_success(self, mock_article, mock_req):
+        mock_req.return_value.headers = {'Content-Type': 'text/html'}
+
+        mock_article.return_value.html = ''
+        mock_article.return_value.text = 'text mock page'
+        mock_article.return_value.title = 'title mock page'
+        mock_article.return_value.meta_img = 'http://url-to-image/img.jpg'
+        mock_article.return_value.meta_description = None
+        mock_article.return_value.publish_date = None
+
         url_post = 'https://google.com'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': url_post})
@@ -54,6 +66,7 @@ class TestLink(TestCase):
     @patch('link.utils.requests.head')
     def test_post_new_link_image_success(self, mock_req):
         mock_req.return_value.headers = {'Content-Type': 'image/jpg'}
+
         img_url = 'https://test.fleeg/valid-image-link'
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('link_new'), data={'url': img_url})
