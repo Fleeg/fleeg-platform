@@ -1,4 +1,7 @@
 ![Fleeg Logo](https://raw.githubusercontent.com/Fleeg/fleeg-platform/master/common/static/img/logo.png)
+
+[![Build Status](https://travis-ci.org/Fleeg/fleeg-platform.svg?branch=master)](https://travis-ci.org/Fleeg/fleeg-platform)
+[![codecov](https://codecov.io/gh/Fleeg/fleeg-platform/branch/master/graph/badge.svg)](https://codecov.io/gh/Fleeg/fleeg-platform)
 # Welcome to Fleeg!
 Fleeg is a free and open source social network to index pages, where everyone can contribute to build that platform as you can and prefer. It is built on top Django framework and Python language, so Fleeg project are focus on delivery a free platform for end users, and will be available for all user as soon we think it is stable enough to user get a good experience. You may help us to delivery it faster, see below links to know how:
 
