@@ -1,5 +1,8 @@
 -r requirements
 
+# style checker
+flake8==3.4.1
+
 # test tools
 django-nose==1.4.4
 coverage==4.4.1

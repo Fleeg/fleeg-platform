@@ -80,15 +80,17 @@ class TestLink(TestCase):
             <html>
             <head>
             <meta content="2015-04-09T10:25:24Z" property="og:pubdate"/>
-            <meta content="http://www.cnn.com/2015/04/09/entertainment/feat-monty-python-holy-grail-40-years/index.html"
-            property="og:url"/>
-            <meta content="40 years of 'Holy Grail': The best of Monty Python - CNN" property="og:title"/>
-            <meta content='"Monty Python and the Holy Grail," premiered 40 years ago. The timing was right for the 
-            British comedians (along with their token American, Terry Gilliam). ' property="og:description"/>
+            <meta content="http://www.cnn.com/2015/04/09/entertainment/
+            feat-monty-python-holy-grail-40-years/index.html" property="og:url"/>
+            <meta content="40 years of 'Holy Grail': The best of Monty Python - CNN"
+            property="og:title"/><meta content='"Monty Python and the Holy Grail,"
+            premiered 40 years ago. The timing was right for the
+            British comedians (along with their token American, Terry Gilliam). '
+            property="og:description"/>
             <meta content="CNN" property="og:site_name"/>
             <meta content="article" property="og:type"/>
-            <meta content="http://i2.cdn.cnn.com/cnnnext/dam/assets/150407084310-01-monty-python-super-169.jpg" 
-            property="og:image"/>
+            <meta content="http://i2.cdn.cnn.com/cnnnext/dam/assets/
+            150407084310-01-monty-python-super-169.jpg" property="og:image"/>
             <meta content="1100" property="og:image:width"/>
             <meta content="619" property="og:image:height"/>
             </head>

@@ -1,6 +1,5 @@
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.views.generic import TemplateView
 from account.views import AuthView, ProfileView
 from link.views import LinkView
 
