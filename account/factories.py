@@ -21,7 +21,7 @@ class UserFactory(factory.DjangoModelFactory):
 class AccountFactory(factory.DjangoModelFactory):
     class Meta:
         model = Account
-    
+
     user = factory.SubFactory(UserFactory)
 
 

@@ -7,6 +7,9 @@ install:
   - pip install codecov
   - pip install -r devRequirements
 
+before_script:
+  - flake8 .
+
 script:
   - coverage run manage.py test
   - coverage report

@@ -58,17 +58,17 @@ class TestAccount(TestCase):
         }
         response = self.client.post(reverse('account_login'), data=invalid_login)
         self.assertTemplateUsed(response, 'index.html', 'Authentication failed.')
-    
+
     def test_login_fails_identity_and_password_empty(self):
         response = self.client.post(reverse('account_login'), data={})
         self.assertFormError(response, 'form', 'identity', 'This field is required.')
         self.assertFormError(response, 'form', 'password', 'This field is required.')
-    
+
     def test_signup_with_success(self):
         response = self.client.post(reverse('account_signup'), data=self.form_user)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.context['formSignUp'].is_valid())
-    
+
     def test_signup_fails_username_with_special_character(self):
         username_special_char = self.form_user['username'] + '/'
         self.form_user['username'] = username_special_char
