@@ -1,8 +1,11 @@
 ![Fleeg Logo](https://raw.githubusercontent.com/Fleeg/fleeg-platform/master/common/static/img/logo.png)
 
+# Welcome to Fleeg!
 [![Build Status](https://travis-ci.org/Fleeg/fleeg-platform.svg?branch=master)](https://travis-ci.org/Fleeg/fleeg-platform)
 [![codecov](https://codecov.io/gh/Fleeg/fleeg-platform/branch/master/graph/badge.svg)](https://codecov.io/gh/Fleeg/fleeg-platform)
-# Welcome to Fleeg!
+[![Code Climate](https://codeclimate.com/github/Fleeg/fleeg-platform/badges/gpa.svg)](https://codeclimate.com/github/Fleeg/fleeg-platform)
+![AGPLv3 License](https://img.shields.io/badge/license-AGPLv3-green.svg)
+
 Fleeg is a free and open source social network to index pages, where everyone can contribute to build that platform as you can and prefer. It is built on top Django framework and Python language, so Fleeg project are focus on delivery a free platform for end users, and will be available for all user as soon we think it is stable enough to user get a good experience. You may help us to delivery it faster, see below links to know how:
 
 * [About](https://github.com/Fleeg/fleeg-platform/wiki/About)
@@ -11,7 +14,7 @@ Fleeg is a free and open source social network to index pages, where everyone ca
 * [Features](https://github.com/Fleeg/fleeg-platform/wiki/Features)
 
 ## Contact Us
-If you need help to setup Fleeg, want to talk about some cool enhancement or you have some questions, please join us in [Slack](http://fleeg.slack.com/).
+If you need help to setup Fleeg, want to talk about some cool enhancement or you have some questions, please join us in [Rocket.chat](http://fleeg.rocket.chat/).
 
 ## Code of Conduct
 Help us keep the Fleeg Community open and inclusive. Please read and follow our [Code of Conduct](https://github.com/Fleeg/fleeg-platform/blob/master/CODE_OF_CONDUCT.md).
