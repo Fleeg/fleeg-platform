@@ -20,5 +20,4 @@ after_success:
 notifications:
   email: false
   pushover:
-    webhooks: ​
-https://fleeg.rocket.chat/hooks/6fTG3EgvwyELD8WWE/NfMNWCuyh2YbTbSZKu25pDAAMsBxmCmPQAEYPbA3JWYMdtGx
+    webhooks: https://fleeg.rocket.chat/hooks/6fTG3EgvwyELD8WWE/NfMNWCuyh2YbTbSZKu25pDAAMsBxmCmPQAEYPbA3JWYMdtGx
