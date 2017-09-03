@@ -2,6 +2,7 @@
 
 # Welcome to Fleeg!
 [![Build Status](https://travis-ci.org/Fleeg/fleeg-platform.svg?branch=master)](https://travis-ci.org/Fleeg/fleeg-platform)
+[![Requirements Status](https://requires.io/github/Fleeg/fleeg-platform/requirements.svg?branch=master)](https://requires.io/github/Fleeg/fleeg-platform/requirements/?branch=master)
 [![codecov](https://codecov.io/gh/Fleeg/fleeg-platform/branch/master/graph/badge.svg)](https://codecov.io/gh/Fleeg/fleeg-platform)
 [![Code Climate](https://codeclimate.com/github/Fleeg/fleeg-platform/badges/gpa.svg)](https://codeclimate.com/github/Fleeg/fleeg-platform)
 ![AGPLv3 License](https://img.shields.io/badge/license-AGPLv3-green.svg)
