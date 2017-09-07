@@ -29,6 +29,13 @@ class Post(models.Model):
     def get_tags_as_list(self):
         return self.tags.split(',')
 
+    @staticmethod
+    def list_with_actions(username, user=None):
+        qs_reactions = Reaction.objects.filter(post=models.OuterRef('pk'), owner=user)
+
+        return Post.objects.filter(owner__user__username=username).annotate(
+                    is_reacted=models.Exists(queryset=qs_reactions)).order_by('-created_at')
+
     def __str__(self):
         return self.title
 

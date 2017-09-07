@@ -5,18 +5,19 @@ from django.contrib.auth.models import User
 from account.models import Account
 from link.utils import LinkException
 from link.forms import URLForm
-from link.models import Post
+from link.models import Post, Reaction
 
 
 class LinkView:
     @staticmethod
     def links(request, username):
-        posts = Post.objects.filter(owner__user__username=username).order_by('-created_at')
+        session_account = None
         profile = get_object_or_404(User, username=username)
         profile_account = Account.get_by_user(user=profile)
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
+        posts = Post.list_with_actions(username, session_account)
         return render(request, 'link/link.html', {'profile': profile, 'posts': posts})
 
     @staticmethod
@@ -26,12 +27,12 @@ class LinkView:
         if request.method == 'POST':
             form = URLForm(request.POST)
             if form.is_valid():
-                link = form.save(commit=False)
-                link.owner = Account.get_by_user(request.user)
-                link.publisher = Account.get_by_user(request.user)
+                post = form.save(commit=False)
+                post.owner = Account.get_by_user(request.user)
+                post.publisher = Account.get_by_user(request.user)
                 try:
-                    link.set_metadata()
-                    link.save()
+                    post.set_metadata()
+                    post.save()
                     return redirect('home')
                 except LinkException as e:
                     form.add_error(None, e)
@@ -41,5 +42,27 @@ class LinkView:
     @login_required
     def wall(request):
         owner = request.user.accounts.first()
-        posts = owner.posts.all().order_by('-created_at')
+        posts = Post.list_with_actions(request.user.username, owner)
         return render(request, 'home.html', {'posts': posts})
+
+
+class LinkReactionView:
+    @staticmethod
+    @login_required
+    def react(request, post_id):
+        if request.method == 'POST':
+            reaction = Reaction()
+            reaction.post = Post.objects.get(id=post_id)
+            reaction.owner = Account.get_by_user(request.user)
+            reaction.save()
+        redirect_path = request.GET['next']
+        return redirect(redirect_path)
+
+    @staticmethod
+    @login_required
+    def unreact(request, post_id):
+        if request.method == 'POST':
+            reaction = Reaction.objects.filter(post__id=post_id, owner__user=request.user).first()
+            reaction.delete()
+        redirect_path = request.GET['next']
+        return redirect(redirect_path)
