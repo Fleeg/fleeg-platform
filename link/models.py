@@ -1,3 +1,5 @@
+import copy
+
 from django.db import models
 from link import utils
 
@@ -5,6 +7,7 @@ from link import utils
 class Post(models.Model):
     owner = models.ForeignKey(to='account.Account', related_name='own_posts')
     publisher = models.ForeignKey(to='account.Account', related_name='posts')
+    origin = models.ForeignKey(to='link.Post', null=True)
     url = models.URLField()
     type = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
@@ -29,12 +32,21 @@ class Post(models.Model):
     def get_tags_as_list(self):
         return self.tags.split(',')
 
+    def add_link(self, user):
+        new_post = copy.copy(self)
+        new_post.owner = user
+        new_post.origin = self
+        new_post.id = None
+        new_post.save()
+
     @staticmethod
     def list_with_actions(username, user=None):
         qs_reactions = Reaction.objects.filter(post=models.OuterRef('pk'), owner=user)
+        qs_added = Post.objects.filter(origin=models.OuterRef('pk'), owner=user)
 
         return Post.objects.filter(owner__user__username=username).annotate(
-                    is_reacted=models.Exists(queryset=qs_reactions)).order_by('-created_at')
+                    is_reacted=models.Exists(queryset=qs_reactions)).annotate(
+                    is_added=models.Exists(queryset=qs_added)).order_by('-created_at')
 
     def __str__(self):
         return self.title

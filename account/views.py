@@ -65,7 +65,7 @@ class ProfileView:
     def posts(request, username):
         profile = get_object_or_404(User, username=username)
         profile_account = Account.get_by_user(user=profile)
-        posts = profile_account.posts.all()
+        posts = profile_account.posts.filter(owner=profile_account)
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)

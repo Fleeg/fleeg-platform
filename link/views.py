@@ -22,14 +22,22 @@ class LinkView:
 
     @staticmethod
     @login_required
+    def wall(request):
+        owner = request.user.accounts.first()
+        posts = Post.list_with_actions(request.user.username, owner)
+        return render(request, 'home.html', {'posts': posts})
+
+    @staticmethod
+    @login_required
     def new(request):
         form = None
         if request.method == 'POST':
             form = URLForm(request.POST)
             if form.is_valid():
                 post = form.save(commit=False)
-                post.owner = Account.get_by_user(request.user)
-                post.publisher = Account.get_by_user(request.user)
+                user_account = Account.get_by_user(request.user)
+                post.owner = user_account
+                post.publisher = user_account
                 try:
                     post.set_metadata()
                     post.save()
@@ -40,10 +48,13 @@ class LinkView:
 
     @staticmethod
     @login_required
-    def wall(request):
-        owner = request.user.accounts.first()
-        posts = Post.list_with_actions(request.user.username, owner)
-        return render(request, 'home.html', {'posts': posts})
+    def add(request, post_id):
+        if request.method == 'POST':
+            post = Post.objects.get(id=post_id)
+            account = Account.get_by_user(request.user)
+            post.add_link(account)
+        redirect_path = request.GET['next']
+        return redirect(redirect_path)
 
 
 class LinkReactionView:
