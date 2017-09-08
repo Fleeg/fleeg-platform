@@ -49,10 +49,8 @@
             {% endif %}
             <hr style="margin:0; margin-top:10px;"/>
             <div class="fspace-item" style="font-size: 11px; padding:25px 15px;">
-                <a href="#info-modal" data-toggle="modal" style="color:#444;">
-                    <strong>20</strong> Additions
-                </a>
-                <span style="color:#444;margin-right:5px;"><strong>20</strong> Views</span>
+                <span style="color:#444;"><strong>{{ post.adds.count }}</strong> Adds</span>
+                <span style="color:#444;margin-right:5px;"><strong>{{ post.reactions.count }}</strong> Stars</span>
                 <div class="flink-options" style="float:right;">
                 {% if not user.is_authenticated or user != post.owner.user %}
                     {% if post.is_added %}

@@ -7,7 +7,7 @@ from link import utils
 class Post(models.Model):
     owner = models.ForeignKey(to='account.Account', related_name='own_posts')
     publisher = models.ForeignKey(to='account.Account', related_name='posts')
-    origin = models.ForeignKey(to='link.Post', null=True)
+    origin = models.ForeignKey(to='link.Post', related_name='adds', null=True)
     url = models.URLField()
     type = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
