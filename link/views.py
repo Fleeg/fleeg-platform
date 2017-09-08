@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from account.models import Account
 from link.utils import LinkException
-from link.forms import URLForm
+from link.forms import URLForm, CommentForm
 from link.models import Post, Reaction
 
 
@@ -75,5 +75,20 @@ class LinkReactionView:
         if request.method == 'POST':
             reaction = Reaction.objects.filter(post__id=post_id, owner__user=request.user).first()
             reaction.delete()
+        redirect_path = request.GET['next']
+        return redirect(redirect_path)
+
+
+class LinkCommentView:
+    @staticmethod
+    @login_required
+    def comment(request, post_id):
+        if request.method == 'POST':
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.post = Post.objects.get(id=post_id)
+                comment.owner = Account.get_by_user(request.user)
+                comment.save()
         redirect_path = request.GET['next']
         return redirect(redirect_path)

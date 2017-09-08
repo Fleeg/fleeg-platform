@@ -3,93 +3,94 @@
 {% block profile-wall %}
 {% for post in posts %}
 <div class="item fwall-content" style="float:left">
-<!-- published item -->
-<div class="fpublished-item">
-    <div class="fspace-item">
-        <div class="fimage-publisher">
-            <img src="{% static 'img/profile/default.jpg' %}" class="img-circle fimg-circle" />
+    <!-- published item -->
+    <div class="fpublished-item">
+        <div class="fspace-item">
+            <div class="fimage-publisher">
+                <img src="{% static 'img/profile/default.jpg' %}" class="img-circle fimg-circle" />
+            </div>
+            <div class="fname-publisher">
+                <div style="font-size:13px; font-weight: 900; width:300px;">
+                    <a href="{% url 'profile' post.owner.user.username %}" style="color:#000">
+                        {{ post.owner.user.first_name }} {{ post.owner.user.last_name }}
+                    </a>
+                </div>
+                <div style="font-size:11px; color:#666; width:300px;">Published at {{ post.created_at }}</div>
+            </div>
         </div>
-        <div class="fname-publisher">
-            <div style="font-size:13px; font-weight: 900; width:300px;">
-                <a href="{% url 'profile' post.owner.user.username %}" style="color:#000">
-                    {{ post.owner.user.first_name }} {{ post.owner.user.last_name }}
+        <div class="fcontent-item">
+            {% if post.publisher != post.owner %}
+                <div class="fspace-item" style="font-size:12px; padding: 20px 10px 0 10px;" >
+                    <a href="{% url 'profile' post.publisher.user.username %}" style="font-weight: 900; color:#000">
+                        {{ post.publisher.user.first_name }} {{ post.publisher.user.last_name }}
+                    </a> originally shared:<hr style="margin:0; margin-top:10px;"/>
+                </div>
+            {% endif %}
+            <h4 class="fspace-item" style="padding-bottom:0; margin-bottom:2px;">
+                <a href="{{ post.url }}" target="_blank" title="{{ post.title }}"
+                   title="{{ post.title }}" style="color:#000;">{{ post.title|truncatechars:95 }}</a>
+            </h4>
+            <div class="url-link">{{ post.url|truncatechars:180 }}</div>
+            {% if post.image_url  %}
+            <div class="flink-img">
+                <img src="{{ post.image_url }}" style="width:100%;" />
+            </div>
+            {% endif %}
+            {% if post.summary %}
+            <div style="text-align: justify; font-size: 12px; padding: 20px 10px 10px 10px;">{{ post.summary }}</div>
+            {% endif %}
+            {% if post.tags %}
+            <div style="text-align: justify; padding: 20px 10px 10px 10px; font-size: 11px;">
+            <strong>Tags:</strong>
+            {% for tag in post.get_tags_as_list %}
+            <a href="#" style="text-decoration: underline; color: #222">{{ tag }}</a>
+            {% endfor %}
+            </div>
+            {% endif %}
+            <hr style="margin:0; margin-top:10px;"/>
+            <div class="fspace-item" style="font-size: 11px; padding:25px 15px;">
+                <a href="#info-modal" data-toggle="modal" style="color:#444;">
+                    <strong>20</strong> Additions
                 </a>
-            </div>
-            <div style="font-size:11px; color:#666; width:300px;">Published at {{ post.created_at }}</div>
-        </div>
-    </div>
-    <div class="fcontent-item">
-        {% if post.publisher != post.owner %}
-            <div class="fspace-item" style="font-size:12px; padding: 20px 10px 0 10px;" >
-                <a href="{% url 'profile' post.publisher.user.username %}" style="font-weight: 900; color:#000">
-                    {{ post.publisher.user.first_name }} {{ post.publisher.user.last_name }}
-                </a> originally shared:<hr style="margin:0; margin-top:10px;"/>
-            </div>
-        {% endif %}
-        <h4 class="fspace-item" style="padding-bottom:0; margin-bottom:2px;">
-            <a href="{{ post.url }}" target="_blank" title="{{ post.title }}"
-               title="{{ post.title }}" style="color:#000;">{{ post.title|truncatechars:95 }}</a>
-        </h4>
-        <div class="url-link">{{ post.url|truncatechars:180 }}</div>
-        {% if post.image_url  %}
-        <div class="flink-img">
-            <img src="{{ post.image_url }}" style="width:100%;" />
-        </div>
-        {% endif %}
-        {% if post.summary %}
-        <div style="text-align: justify; font-size: 12px; padding: 20px 10px 10px 10px;">{{ post.summary }}</div>
-        {% endif %}
-        {% if post.tags %}
-        <div style="text-align: justify; padding: 20px 10px 10px 10px; font-size: 11px;">
-        <strong>Tags:</strong>
-        {% for tag in post.get_tags_as_list %}
-        <a href="#" style="text-decoration: underline; color: #222">{{ tag }}</a>
-        {% endfor %}
-        </div>
-        {% endif %}
-        <hr style="margin:0; margin-top:10px;"/>
-        <div class="fspace-item" style="font-size: 11px; padding:25px 15px;">
-            <a href="#info-modal" data-toggle="modal" style="color:#444;">
-                <strong>20</strong> Additions
-            </a>
-            <span style="color:#444;margin-right:5px;"><strong>20</strong> Views</span>
-            <div class="flink-options" style="float:right;">
-            {% if not user.is_authenticated or user != post.owner.user %}
-                {% if post.is_added %}
-                    <div class="btn" title="Link added" style="color: #555; font-size: 12px; cursor: default">
-                        <span class="glyphicon glyphicon-plus"></span> Added
-                    </div>
-                {% else %}
-                    <form method="POST" action="{% url 'link_add' post_id=post.id %}?next={{ request.path }}" style="display: inline">
+                <span style="color:#444;margin-right:5px;"><strong>20</strong> Views</span>
+                <div class="flink-options" style="float:right;">
+                {% if not user.is_authenticated or user != post.owner.user %}
+                    {% if post.is_added %}
+                        <div class="btn" title="Link added" style="color: #555; font-size: 12px; cursor: default">
+                            <span class="glyphicon glyphicon-plus"></span> Added
+                        </div>
+                    {% else %}
+                        <form method="POST" action="{% url 'link_add' post_id=post.id %}?next={{ request.path }}" style="display: inline">
+                            {% csrf_token %}
+                            <button class="btn" title="Add" style="background-color: #FFFFFF; border-color: #D9D9D9; color: #555; font-size: 12px;">
+                                <span class="glyphicon glyphicon-plus"></span> Add
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+                {% if post.is_reacted %}
+                    <form method="POST" action="{% url 'link_unreact' post_id=post.id %}?next={{ request.path }}" style="display: inline">
                         {% csrf_token %}
-                        <button class="btn" title="Add" style="background-color: #FFFFFF; border-color: #D9D9D9; color: #555; font-size: 12px;">
-                            <span class="glyphicon glyphicon-plus"></span> Add
+                        <button class="btn" title="Unfavorite" style="color: #555; font-size: 12px;">
+                            <span class="glyphicon glyphicon-star"></span>
+                        </button>
+                    </form>
+                {% else %}
+                    <form method="POST" action="{% url 'link_react' post_id=post.id %}?next={{ request.path }}" style="display: inline">
+                        {% csrf_token %}
+                        <button class="btn" title="Favorite" style="background-color: #FFFFFF; border-color: #D9D9D9; color: #555; font-size: 12px;">
+                            <span class="glyphicon glyphicon-star"></span>
                         </button>
                     </form>
                 {% endif %}
-            {% endif %}
-            {% if post.is_reacted %}
-                <form method="POST" action="{% url 'link_unreact' post_id=post.id %}?next={{ request.path }}" style="display: inline">
-                    {% csrf_token %}
-                    <button class="btn" title="Unfavorite" style="color: #555; font-size: 12px;">
-                        <span class="glyphicon glyphicon-star"></span>
-                    </button>
-                </form>
-            {% else %}
-                <form method="POST" action="{% url 'link_react' post_id=post.id %}?next={{ request.path }}" style="display: inline">
-                    {% csrf_token %}
-                    <button class="btn" title="Favorite" style="background-color: #FFFFFF; border-color: #D9D9D9; color: #555; font-size: 12px;">
-                        <span class="glyphicon glyphicon-star"></span>
-                    </button>
-                </form>
-            {% endif %}
-                <a href="{{ post.url }}" target="_blank" class="btn"  title="View">
-                    <span class="glyphicon glyphicon-share-alt"></span>
-                </a>
+                    <a href="{{ post.url }}" target="_blank" class="btn"  title="View">
+                        <span class="glyphicon glyphicon-share-alt"></span>
+                    </a>
+                </div>
             </div>
         </div>
+        {% include 'link/comment.html' %}
     </div>
-</div>
 </div>
 {% empty %}
 <div><span>No items yet.</span></div>
