@@ -5,11 +5,13 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 
 from account.factories import AccountFactory, DEFAULT_PASSWORD
-from link.factories import PostFactory
+from link.factories import PostFactory, ReactionFactory
 
 
 class TestLink(TestCase):
     def setUp(self):
+        self.other_user = AccountFactory.create()
+        self.other_user_post = PostFactory.create(owner=self.other_user, publisher=self.other_user)
         self.account = AccountFactory.create()
         self.user = self.account.user
         [PostFactory.create(owner=self.account, publisher=self.account) for _ in range(2)]
@@ -107,3 +109,40 @@ class TestLink(TestCase):
         response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertRedirects(response, reverse('home'))
         self.assertEqual(self.account.posts.all().count(), 3)
+
+    def test_add_as_my_link_from_post(self):
+        url = '{0}?next={1}'.format(reverse('link_add', args=[self.other_user_post.id]),
+                                    reverse('home'))
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(url)
+        self.assertRedirects(response, reverse('home'))
+
+    def test_react_on_post(self):
+        url = '{0}?next={1}'.format(reverse('link_react', args=[self.other_user_post.id]),
+                                    reverse('home'))
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(url)
+        self.assertRedirects(response, reverse('home'))
+
+    def test_unreact_on_post(self):
+        post_with_reaction = PostFactory.create(owner=self.other_user, publisher=self.other_user,)
+        ReactionFactory.create(owner=self.account, post=post_with_reaction)
+        url = '{0}?next={1}'.format(reverse('link_unreact', args=[post_with_reaction.id]),
+                                    reverse('home'))
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(url)
+        self.assertRedirects(response, reverse('home'))
+
+    def test_comment_post_with_no_message(self):
+        url = '{0}?next={1}'.format(reverse('link_comment', args=[self.other_user_post.id]),
+                                    reverse('home'))
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(url)
+        self.assertRedirects(response, reverse('home'))
+
+    def test_comment_post(self):
+        url = '{0}?next={1}'.format(reverse('link_comment', args=[self.other_user_post.id]),
+                                    reverse('home'))
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(url, data={'text': 'my comment'})
+        self.assertRedirects(response, reverse('home'))
