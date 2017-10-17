@@ -282,6 +282,11 @@ footer{
 	height: 50px;
 }
 
+.fimg-circle-small {
+    width: 30px;
+    height: 30px;
+}
+
 /*wall*/
 .fwall-content {
 	width: 460px;

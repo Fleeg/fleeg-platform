@@ -26,9 +26,9 @@ class CommentFactory(factory.DjangoModelFactory):
     post = factory.SubFactory(PostFactory)
 
 
-class Reaction(factory.DjangoModelFactory):
+class ReactionFactory(factory.DjangoModelFactory):
     class Meta:
-        model: Reaction
+        model = Reaction
 
     owner = factory.SubFactory(AccountFactory)
     post = factory.SubFactory(PostFactory)
