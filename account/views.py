@@ -41,7 +41,8 @@ class AuthView:
                         login(request, user)
                         if 'keep_connected' in data:
                             request.session.set_expiry(0)
-                        return redirect(reverse('home'))
+                        redirect_path = request.GET['next'] or reverse('home')
+                        return redirect(redirect_path)
                 except User.DoesNotExist:
                     pass
         return render(request, 'index.html', {'form': form})

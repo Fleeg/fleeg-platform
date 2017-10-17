@@ -5,7 +5,7 @@
          <div id="flogin-alert" class="alert alert-warning" style="color:#222;">Authentication failed.
              <strong>Try again.</strong></div>
     {% endif %}
-    <form accept-charset="UTF-8" id="login-form" method="POST" action="{% url 'account_login' %}">
+    <form accept-charset="UTF-8" id="login-form" method="POST" action="{% url 'account_login' %}?next={{ request.GET.next }}">
         {% csrf_token %}
         <input type="text" name="identity" id="identify" placeholder="Username or E-mail" value="{{ form.identity.value }}"
                class="form-control flogin-input" style="margin-bottom: 15px;" required>
