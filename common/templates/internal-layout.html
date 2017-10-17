@@ -59,7 +59,7 @@
                       <ul class="dropdown-menu">
                         <li><a href="{% url 'home' %}">Home</a></li>
                         <li><a href="{% url 'profile' username=user.username %}">Profile</a></li>
-                        <li><a href="#">Settings</a></li>
+                        <li><a href="{% url 'account_settings' %}">Settings</a></li>
                         <li class="divider"></li>
                         <li><a href="{% url 'account_logout' %}">Sign out</a></li>
                       </ul>

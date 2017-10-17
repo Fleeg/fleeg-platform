@@ -1,0 +1,8 @@
+<!-- SIDE MENU -->
+<menu>
+    <ul>
+        <li><a href="{% url 'profile' username=user.username %}">Profile</a></li>
+        <li><a href="{% url 'followers' username=user.username %}">Followers</a></li>
+        <li><a href="{% url 'following' username=user.username %}">Following</a></li>
+    </ul>
+</menu>

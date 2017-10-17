@@ -110,3 +110,11 @@ class ProfileView:
             follow = Account.get_by_username(username)
             owner.unfollow(follow)
             return redirect('profile', username)
+
+
+class SettingsView:
+    @staticmethod
+    @login_required
+    def settings(request):
+        account = Account.get_by_user(request.user)
+        return render(request, 'account/settings.html', {'settings': account})
