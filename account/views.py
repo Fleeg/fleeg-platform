@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from account.forms import SignUpForm, LoginForm
+from account.forms import SignUpForm, LoginForm, SettingsForm
 from account.models import Account, Relationship
 
 
@@ -117,5 +117,15 @@ class SettingsView:
     @staticmethod
     @login_required
     def settings(request):
-        account = Account.get_by_user(request.user)
-        return render(request, 'account/settings.html', {'settings': account})
+        user = request.user
+        form = None
+        if request.method == 'POST':
+            form = SettingsForm(request.POST)
+            if form.is_valid():
+                data = form.data
+                user.first_name = data['first_name']
+                user.last_name = data['last_name']
+                if data['password']:
+                    user.set_password(data['password'])
+                user.save()
+        return render(request, 'account/settings.html', {'settings': user, 'form': form})

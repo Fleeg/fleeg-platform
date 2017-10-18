@@ -30,3 +30,18 @@ class LoginForm(forms.Form):
     identity = forms.CharField(min_length=3, required=True)
     password = forms.CharField(min_length=3, required=True)
     keep_connected = forms.BooleanField(required=False)
+
+
+class SettingsForm(forms.Form):
+    first_name = forms.CharField(min_length=3, required=True)
+    last_name = forms.CharField(min_length=3, required=True)
+    password = forms.CharField(min_length=3, required=False)
+    confirm_password = forms.CharField(min_length=3, required=False)
+
+    def clean(self):
+        cleaned_data = super(SettingsForm, self).clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        if password != confirm_password:
+            raise forms.ValidationError('Password confirmation does not equal with password.',)
+        return password

@@ -3,35 +3,45 @@
 {% block content %}
     {% include 'side-menu.html' %}
     <!-- CONTENT -->
-    <div class="container fhome-wall" style="margin-top:70px;">
+    <div class="container fhome-wall" style="margin-top:50px;">
         <h2>Settings</h2>
-        {% if formSignUp.errors %}
+        {% if form.errors %}
             <div id="fsignup-alert" class="alert alert-warning" style="color:#222;">
-                <strong>Sing up failed.</strong> Verify information and try again.
-            {{ formSignUp.errors }}
+                <strong>Update settings failed.</strong> Verify message below and try again.
+            {{ form.errors }}
             </div>
-        {% elif formSignUp %}
+        {% elif form %}
             <div id="fsignup-success" class="alert alert-success" style="color:#222;">
-                <strong>Account is done.</strong>You can login right now.</div>
+                <strong>Settings updated.</strong> You can leave this page without lost information.</div>
         {% endif %}
-        <form id="signup-form" accept-charset="UTF-8" method="POST" action="{% url 'account_settings' %}">
+        <form accept-charset="UTF-8" method="POST" action="{% url 'account_settings' %}">
             {% csrf_token %}
-            <div class="form-group" style="border-top: 1px solid #CCCCCC; padding: 10px 0; font-size: 14px;">
-                <strong>Username</strong> @{{ settings.user.username }}
-                <strong>E-mail</strong> {{ settings.user.email }}
+            <div class="form-group" style="border-top: 1px solid #CCCCCC; padding: 10px; font-size: 16px;">
+                <h4>Account</h4>
+                <strong>Username</strong> @{{ settings.username }}
+                <strong style="margin-left: 50px">E-mail</strong> {{ settings.email }}
             </div>
 
-            <input type="text" name="first_name" id="firstName" value="{{ formSignUp.first_name.value }}"
-                   placeholder="First Name" class="form-control fsignup-input" style="width:48%; float:left;" required>
-            <input type="text" name="last_name" id="lastName" value="{{ formSignUp.last_name.value }}"
-                   placeholder="Last Name" class="form-control fsignup-input" style="width:48%; display:inline-block; margin-left:4%;" required>
+            <div class="form-group" style="border-top: 1px solid #CCCCCC; padding: 10px; font-size: 16px;">
+                <h4>Personal</h4>
+                <strong>First Name</strong>
+                <input type="text" name="first_name" id="firstName" value="{{ settings.first_name }}"
+                   placeholder="First Name" class="form-control fsignup-input" style="width:60%;" required>
+                <strong>Last Name</strong>
+                <input type="text" name="last_name" id="lastName" value="{{ settings.last_name }}"
+                       placeholder="Last Name" class="form-control fsignup-input" style="width:60%;" required>
+            </div>
 
-            <input type="password" name="password" id="password-signup"
-                   placeholder="Password" class="form-control fsignup-input" style="width:48%; float:left;" required>
-            <input type="confirmation" name="confirmation" id="password-signup"
-                   placeholder="Password" class="form-control fsignup-input" style="width:48%; display:inline-block; margin-left:4%;" required>
-
-            <input type="submit" value="Update" class="btn btn-success btn-block fsignup-input">
+            <div class="form-group" style="border-top: 1px solid #CCCCCC; padding: 10px; font-size: 16px;">
+                <h4>Security</h4>
+                <strong>New Password</strong>
+                <input type="password" name="password" placeholder="Password"
+                       class="form-control fsignup-input" style="width:60%;">
+                <strong>Confirm Password</strong>
+                <input type="password" name="confirm_password" placeholder="Confirm Password"
+                       class="form-control fsignup-input" style="width:60%;">
+            </div>
+            <input type="submit" value="Update" class="btn btn-success btn-block fsignup-input" style="width:60%;">
         </form>
     </div>
 {% endblock %}
