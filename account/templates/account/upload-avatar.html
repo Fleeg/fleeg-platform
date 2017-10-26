@@ -1,0 +1,13 @@
+{% load staticfiles %}
+{% if user.has_avatar %}
+<img src="/media/images/{{ user.username }}.jpg" />
+{% else %}
+<img src="{% static 'img/profile/default.jpg' %}" />
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" action="{% url 'account_settings_upload' %}"
+    style="float: right">
+    {% csrf_token %}
+    <input type="file" name="user_avatar">
+    <input type="submit" value="Change Avatar" class="btn btn-success btn-block fsignup-input" />
+</form>

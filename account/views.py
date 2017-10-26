@@ -1,7 +1,10 @@
+import os
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage
+from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from account.forms import SignUpForm, LoginForm, SettingsForm
 from account.models import Account, Relationship
@@ -41,7 +44,7 @@ class AuthView:
                         login(request, user)
                         if 'keep_connected' in data:
                             request.session.set_expiry(0)
-                        redirect_path = request.GET['next'] or reverse('home')
+                        redirect_path = request.GET.get('next', reverse('home'))  # TODO: Create test with redirect
                         return redirect(redirect_path)
                 except User.DoesNotExist:
                     pass
@@ -128,4 +131,21 @@ class SettingsView:
                 if data['password']:
                     user.set_password(data['password'])
                 user.save()
+        fs = FileSystemStorage()
+        user.has_avatar = fs.exists(user.username + '.jpg')
         return render(request, 'account/settings.html', {'settings': user, 'form': form})
+
+    @staticmethod
+    @login_required
+    def upload_avatar(request):
+        username = request.user.username
+        user_avatar = request.FILES['user_avatar']
+        if request.method == 'POST' and user_avatar:
+            ext = os.path.splitext(user_avatar.name)[1]
+            if ext.lower() in ['.jpg', '.jpeg', '.png']:
+                filename = username + '.jpg'
+                fs = FileSystemStorage()
+                if fs.exists(filename):
+                    fs.delete(filename)
+                fs.save(filename, user_avatar)
+        return redirect('account_settings')

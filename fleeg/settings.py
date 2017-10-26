@@ -117,9 +117,20 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'common/static'),
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 if TESTING:
     # ADD NOSE TO TEST AND COVERAGE APPS
     INSTALLED_APPS.append('django_nose')
 
     # Use nose to run all tests
     TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+    # NOSE_ARGS = [
+    #     '--with-coverage',
+    #     '--cover-package=common,account,link',
+    #     '--cover-inclusive',
+    #     '--cover-html',
+    # ]
