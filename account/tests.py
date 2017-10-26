@@ -37,6 +37,12 @@ class TestAccount(TestCase):
         response = self.client.get(reverse('index'))
         self.assertRedirects(response, reverse('home'))
 
+    def test_login_with_redirect_next_page(self):
+        response = self.client.post('{0}?next={1}'.format(reverse('account_login'),
+                                                          reverse('account_settings')),
+                                    data=self.form_login)
+        self.assertRedirects(response, reverse('account_settings'))
+
     def test_login_with_username_success(self):
         response = self.client.post(reverse('account_login'), data=self.form_login)
         self.assertRedirects(response, reverse('home'))

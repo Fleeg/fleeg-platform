@@ -44,7 +44,7 @@ class AuthView:
                         login(request, user)
                         if 'keep_connected' in data:
                             request.session.set_expiry(0)
-                        redirect_path = request.GET.get('next', reverse('home'))  # TODO: Create test with redirect
+                        redirect_path = request.GET.get('next', reverse('home'))
                         return redirect(redirect_path)
                 except User.DoesNotExist:
                     pass
