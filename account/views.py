@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
-from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from account.forms import SignUpForm, LoginForm, SettingsForm
 from account.models import Account, Relationship

@@ -89,6 +89,7 @@ class TestLink(TestCase):
             premiered 40 years ago. The timing was right for the
             British comedians (along with their token American, Terry Gilliam). '
             property="og:description"/>
+            <meta property="og:empty_tag"/>
             <meta content="CNN" property="og:site_name"/>
             <meta content="article" property="og:type"/>
             <meta content="http://i2.cdn.cnn.com/cnnnext/dam/assets/

@@ -62,7 +62,7 @@ def get_page_info(url):
         'title': page_og.title or page.title or get_title_from_url(),
         'summary': page_og.description or page.meta_description or summary_from_text(page_text),
         'image': page_og.image or page.meta_img or page.top_image or image_url,
-        'tags': build_tags(page.meta_keywords, page.meta_keywords),
+        'tags': build_tags(page.meta_keywords, list(page.tags)),
         'publish_date': page.publish_date or None,
         'text': page_text,
     }
