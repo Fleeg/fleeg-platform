@@ -51,7 +51,7 @@ class TestLink(TestCase):
     @patch('link.utils.requests.head')
     @patch('link.utils.Article')
     def test_post_new_link_success(self, mock_article, mock_req):
-        mock_req.return_value.headers = {'Content-Type': 'text/html'}
+        mock_req.return_value.headers = {'Content-Type': 'text/plain'}
 
         mock_article.return_value.html = ''
         mock_article.return_value.text = 'text mock page'
