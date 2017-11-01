@@ -14,7 +14,9 @@
             <div id="fsignup-success" class="alert alert-success" style="color:#222;">
                 <strong>Settings updated.</strong> You can leave this page without lost information.</div>
         {% endif %}
-        {% include 'account/upload-avatar.html' %}
+        <div style="float: right; width: 180px;">
+            {% include 'account/upload-avatar.html' %}
+        </div>
         <form accept-charset="UTF-8" method="POST" action="{% url 'account_settings' %}">
             {% csrf_token %}
             <div class="form-group" style="border-top: 1px solid #CCCCCC; padding: 10px; font-size: 16px;">

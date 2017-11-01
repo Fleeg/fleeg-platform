@@ -43,7 +43,15 @@ class AuthView:
                         login(request, user)
                         if 'keep_connected' in data:
                             request.session.set_expiry(0)
-                        redirect_path = request.GET.get('next', reverse('home'))
+                        next_page = request.GET['next']
+                        redirect_path = next_page if next_page != '' else reverse('home')
+                        fs = FileSystemStorage()
+                        if fs.exists(user.username + '.jpg'):
+                            request.session['user_avatar'] = '/static/avatar/'
+                            request.session['user_avatar'] += user.username + '.jpg'
+                        else:
+                            request.session['user_avatar'] = '/static/img/profile/default.jpg'
+                        request.session.save()
                         return redirect(redirect_path)
                 except User.DoesNotExist:
                     pass
@@ -68,6 +76,7 @@ class ProfileView:
     def posts(request, username):
         profile = get_object_or_404(User, username=username)
         profile_account = Account.get_by_user(user=profile)
+        profile.user_avatar = profile_account.user_avatar
         posts = profile_account.posts.filter(owner=profile_account)
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
@@ -76,9 +85,10 @@ class ProfileView:
 
     @staticmethod
     def following(request, username):
-        users = User.objects.filter(accounts__followers__owner__user__username=username)
         profile = get_object_or_404(User, username=username)
+        users = User.objects.filter(accounts__followers__owner__user__username=username)
         profile_account = Account.get_by_user(user=profile)
+        profile.user_avatar = profile_account.user_avatar
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
@@ -86,9 +96,10 @@ class ProfileView:
 
     @staticmethod
     def followers(request, username):
-        users = User.objects.filter(accounts__following__follow__user__username=username)
         profile = get_object_or_404(User, username=username)
+        users = User.objects.filter(accounts__following__follow__user__username=username)
         profile_account = Account.get_by_user(user=profile)
+        profile.user_avatar = profile_account.user_avatar
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
@@ -130,15 +141,13 @@ class SettingsView:
                 if data['password']:
                     user.set_password(data['password'])
                 user.save()
-        fs = FileSystemStorage()
-        user.has_avatar = fs.exists(user.username + '.jpg')
         return render(request, 'account/settings.html', {'settings': user, 'form': form})
 
     @staticmethod
     @login_required
     def upload_avatar(request):
         username = request.user.username
-        user_avatar = request.FILES['user_avatar']
+        user_avatar = request.FILES.get('user_avatar', None)
         if request.method == 'POST' and user_avatar:
             ext = os.path.splitext(user_avatar.name)[1]
             if ext.lower() in ['.jpg', '.jpeg', '.png']:
@@ -147,4 +156,6 @@ class SettingsView:
                 if fs.exists(filename):
                     fs.delete(filename)
                 fs.save(filename, user_avatar)
+                request.session['user_avatar'] = '/static/avatar/' + username + '.jpg'
+                request.session.save()
         return redirect('account_settings')

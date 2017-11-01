@@ -53,7 +53,7 @@
                     </li>
                     <li class="dropdown">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding:0;">
-                          <img width="30px"  src="{% static 'img/profile/default.jpg' %}" />
+                          <img src="{{ request.session.user_avatar }}" style="width:30px;"/>
                           <strong style="color:#222;margin-right:20px;">{{ user.first_name }} {{ user.last_name }}</strong>
                       </a>
                       <ul class="dropdown-menu">
@@ -69,18 +69,6 @@
         </div>
     </div>
     {% block content %}{% endblock %}
-    <!-- Modal -->
-    <div id="info-modal" class="modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- dialog body -->
-                <div class="modal-body" id="modal-body-content"></div>
-                <!-- dialog buttons -->
-                <div class="modal-footer" style="background-color:#eee; border-radius:8px;">
-                    <button type="button" data-dismiss="modal" class="btn btn-primary">OK</button></div>
-            </div>
-        </div>
-    </div>
 	<!-- FOOTER -->
 	<footer>
 		<div class="container">
