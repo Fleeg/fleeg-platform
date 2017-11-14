@@ -7,7 +7,7 @@
 [![Code Climate](https://codeclimate.com/github/Fleeg/fleeg-platform/badges/gpa.svg)](https://codeclimate.com/github/Fleeg/fleeg-platform)
 ![AGPLv3 License](https://img.shields.io/badge/license-AGPLv3-green.svg)
 
-Fleeg is a free and open source social network to index pages, where everyone can contribute to build that platform as you can and prefer. It is built on top Django framework and Python language, so Fleeg project are focus on delivery a free platform for end users, and will be available for all user as soon we think it is stable enough to user get a good experience. You may help us to delivery it faster, see below links to know how:
+Fleeg is a free and open source platform to index and search pages, where everyone can contribute to build that platform as you can and prefer. It is built on top Django framework and Python language, so Fleeg project are focus on delivery a free platform for end users, and will be available for all user as soon we think it is stable enough to user get a good experience. You may help us to delivery it faster, see below links to know how:
 
 * [About](https://github.com/Fleeg/fleeg-platform/wiki/About)
 * [Contributing](https://github.com/Fleeg/fleeg-platform/blob/master/CONTRIBUTING.md)
