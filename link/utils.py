@@ -84,12 +84,6 @@ class OpenGraph:
             return self.__data__[name]
         return None
 
-    def __repr__(self):
-        return self.__data__.__str__()
-
-    def __str__(self):
-        return self.__repr__()
-
     def _parse(self, html):
         doc = BeautifulSoup(html, 'lxml')
         ogs = doc.html.head.findAll(property=re.compile(r'^og'))
