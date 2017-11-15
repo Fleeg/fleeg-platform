@@ -1,5 +1,8 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files import File
+from unittest.mock import MagicMock
 
 from account.factories import AccountFactory, RelationshipFactory, DEFAULT_PASSWORD
 
@@ -139,3 +142,44 @@ class TestAccount(TestCase):
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('account_unfollow', args=[account2.user.username]))
         self.assertRedirects(response, reverse('profile', args=[account2.user.username]))
+
+    def test_settings_update_info(self):
+        settings_info = {'first_name': self.user.first_name, 'last_name': self.user.last_name,
+                         'password': '', 'confirm_password': ''}
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('account_settings'), data=settings_info)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['form'].is_valid())
+
+    def test_settings_update_info_fails_with_empty_form(self):
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('account_settings'), data={})
+        self.assertFormError(response, 'form', 'first_name', 'This field is required.')
+        self.assertFormError(response, 'form', 'last_name', 'This field is required.')
+
+    def test_settings_update_password(self):
+        settings_info = {'first_name': self.user.first_name, 'last_name': self.user.last_name,
+                         'password': 'new', 'confirm_password': 'new'}
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('account_settings'), data=settings_info)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['form'].is_valid())
+
+    def test_settings_update_password_fails_confirmation(self):
+        settings_info = {'first_name': self.user.first_name, 'last_name': self.user.last_name,
+                         'password': 'new', 'confirm_password': 'old'}
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('account_settings'), data=settings_info)
+        self.assertFormError(response, 'form', None,
+                             'Password confirmation does not equal with password.')
+
+    def test_settings_upload_image(self):
+        file_path = 'media/avatar/test.jpg'
+        file = SimpleUploadedFile('image.jpg', content=open(file_path, 'rb').read(),
+                                  content_type='image/jpg')
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('account_settings_upload'), data={'user_avatar': file})
+        self.assertRedirects(response, reverse('account_settings'))
+
+    def test_settings_change_image(self):
+        pass

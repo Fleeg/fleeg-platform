@@ -43,14 +43,9 @@ class AuthView:
                         login(request, user)
                         if 'keep_connected' in data:
                             request.session.set_expiry(0)
-                        next_page = request.GET['next']
-                        redirect_path = next_page if next_page != '' else reverse('home')
-                        fs = FileSystemStorage()
-                        if fs.exists(user.username + '.jpg'):
-                            request.session['user_avatar'] = '/static/avatar/'
-                            request.session['user_avatar'] += user.username + '.jpg'
-                        else:
-                            request.session['user_avatar'] = '/static/img/profile/default.jpg'
+                        redirect_path = request.GET.get('next', reverse('home'))
+                        user_account = Account.get_by_user(user=user)
+                        request.session['user_avatar'] = user_account.user_avatar
                         request.session.save()
                         return redirect(redirect_path)
                 except User.DoesNotExist:
@@ -146,16 +141,19 @@ class SettingsView:
     @staticmethod
     @login_required
     def upload_avatar(request):
-        username = request.user.username
+        user = request.user
         user_avatar = request.FILES.get('user_avatar', None)
         if request.method == 'POST' and user_avatar:
+            print("name: " + user_avatar.name)
             ext = os.path.splitext(user_avatar.name)[1]
+            print(ext)
             if ext.lower() in ['.jpg', '.jpeg', '.png']:
-                filename = username + '.jpg'
+                filename = user.username + '.jpg'
                 fs = FileSystemStorage()
                 if fs.exists(filename):
                     fs.delete(filename)
                 fs.save(filename, user_avatar)
-                request.session['user_avatar'] = '/static/avatar/' + username + '.jpg'
+                user_account = Account.get_by_user(user=user)
+                request.session['user_avatar'] = user_account.user_avatar
                 request.session.save()
         return redirect('account_settings')
