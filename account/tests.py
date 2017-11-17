@@ -1,8 +1,9 @@
+from unittest.mock import patch, MagicMock
+
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.files import File
-from unittest.mock import MagicMock
+
 
 from account.factories import AccountFactory, RelationshipFactory, DEFAULT_PASSWORD
 
@@ -15,7 +16,7 @@ class TestAccount(TestCase):
         self.form_login = {
             'identity': self.user.username,
             'password': DEFAULT_PASSWORD,
-            'keep_connected': False,
+            #'keep_connected': False,
         }
         self.form_user = {
             'first_name': new_user.first_name,
@@ -67,6 +68,14 @@ class TestAccount(TestCase):
         }
         response = self.client.post(reverse('account_login'), data=invalid_login)
         self.assertTemplateUsed(response, 'index.html', 'Authentication failed.')
+
+    def test_login_fails_password_not_valid(self):
+        invalid_login = {
+            'identity': self.form_login['identity'],
+            'password': 'invalid',
+        }
+        response = self.client.post(reverse('account_login'), data=invalid_login)
+        self.assertFormError(response, 'form', None, errors=None)
 
     def test_login_fails_identity_and_password_empty(self):
         response = self.client.post(reverse('account_login'), data={})
@@ -136,6 +145,13 @@ class TestAccount(TestCase):
         response = self.client.post(reverse('account_follow', args=[user2.username]))
         self.assertRedirects(response, reverse('profile', args=[user2.username]))
 
+    def test_follow_following_user(self):
+        account2 = AccountFactory.create()
+        RelationshipFactory.create(owner=self.account, follow=account2)
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('account_follow', args=[account2.user.username]))
+        self.assertRedirects(response, reverse('profile', args=[account2.user.username]))
+
     def test_unfollow_following_user(self):
         account2 = AccountFactory.create()
         RelationshipFactory.create(owner=self.account, follow=account2)
@@ -173,13 +189,30 @@ class TestAccount(TestCase):
         self.assertFormError(response, 'form', None,
                              'Password confirmation does not equal with password.')
 
-    def test_settings_upload_image(self):
-        file_path = 'media/avatar/test.jpg'
-        file = SimpleUploadedFile('image.jpg', content=open(file_path, 'rb').read(),
-                                  content_type='image/jpg')
+    @patch('account.views.FileSystemStorage')
+    @patch('account.models.FileSystemStorage')
+    def test_settings_new_upload_image(self, mock_views_fs, mock_models_fs):
+        mock_views_fs.return_value.exists = MagicMock(return_value=False)
+        mock_models_fs.return_value.exists = MagicMock(return_value=False)
+
+        file = SimpleUploadedFile('image.jpg', content=None, content_type='image/jpg')
         self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
         response = self.client.post(reverse('account_settings_upload'), data={'user_avatar': file})
         self.assertRedirects(response, reverse('account_settings'))
 
-    def test_settings_change_image(self):
-        pass
+    @patch('account.views.FileSystemStorage')
+    @patch('account.models.FileSystemStorage')
+    def test_settings_change_upload_image(self, mock_views_fs, mock_models_fs):
+        mock_views_fs.return_value.exists = MagicMock(return_value=True)
+        mock_models_fs.return_value.exists = MagicMock(return_value=True)
+
+        file = SimpleUploadedFile('image.jpg', content=None, content_type='image/jpg')
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('account_settings_upload'), data={'user_avatar': file})
+        self.assertRedirects(response, reverse('account_settings'))
+
+    def test_settings_upload_no_image(self):
+        file = SimpleUploadedFile('image.gif', content=None, content_type='image/gif')
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(reverse('account_settings_upload'), data={'user_avatar': file})
+        self.assertRedirects(response, reverse('account_settings'))

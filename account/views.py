@@ -1,10 +1,12 @@
 import os
+
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
+
 from account.forms import SignUpForm, LoginForm, SettingsForm
 from account.models import Account, Relationship
 
@@ -43,7 +45,10 @@ class AuthView:
                         login(request, user)
                         if 'keep_connected' in data:
                             request.session.set_expiry(0)
-                        redirect_path = request.GET.get('next', reverse('home'))
+                        next_page = request.GET.get('next', None)
+                        redirect_path = reverse('home')
+                        if next_page is not None and next_page != '':
+                            redirect_path = next_page
                         user_account = Account.get_by_user(user=user)
                         request.session['user_avatar'] = user_account.user_avatar
                         request.session.save()
@@ -144,9 +149,7 @@ class SettingsView:
         user = request.user
         user_avatar = request.FILES.get('user_avatar', None)
         if request.method == 'POST' and user_avatar:
-            print("name: " + user_avatar.name)
             ext = os.path.splitext(user_avatar.name)[1]
-            print(ext)
             if ext.lower() in ['.jpg', '.jpeg', '.png']:
                 filename = user.username + '.jpg'
                 fs = FileSystemStorage()

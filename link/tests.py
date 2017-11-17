@@ -1,6 +1,7 @@
 import requests
 
 from unittest.mock import patch
+
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
@@ -90,6 +91,7 @@ class TestLink(TestCase):
             British comedians (along with their token American, Terry Gilliam). '
             property="og:description"/>
             <meta property="og:empty_tag"/>
+            <meta content="abc,123" property="og:tags"/>
             <meta content="CNN" property="og:site_name"/>
             <meta content="article" property="og:type"/>
             <meta content="http://i2.cdn.cnn.com/cnnnext/dam/assets/

@@ -29,7 +29,7 @@ class SignUpForm(forms.ModelForm):
 class LoginForm(forms.Form):
     identity = forms.CharField(min_length=3, required=True)
     password = forms.CharField(min_length=3, required=True)
-    keep_connected = forms.BooleanField(required=False)
+    keep_connected = forms.BooleanField(initial=False, required=False)
 
 
 class SettingsForm(forms.Form):
