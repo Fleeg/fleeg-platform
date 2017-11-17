@@ -16,7 +16,6 @@ class TestAccount(TestCase):
         self.form_login = {
             'identity': self.user.username,
             'password': DEFAULT_PASSWORD,
-            #'keep_connected': False,
         }
         self.form_user = {
             'first_name': new_user.first_name,
