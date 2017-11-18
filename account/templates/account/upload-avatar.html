@@ -1,0 +1,7 @@
+<img src="{{ request.session.user_avatar }}" style="width:180px; border: 1px solid #ccc;"/>
+
+<form method="post" enctype="multipart/form-data" action="{% url 'account_settings_upload' %}">
+    {% csrf_token %}
+    <input type="file" name="user_avatar">
+    <input type="submit" value="Change Avatar" class="btn btn-success btn-block fsignup-input" />
+</form>

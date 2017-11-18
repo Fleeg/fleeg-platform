@@ -14,6 +14,7 @@ class LinkView:
         session_account = None
         profile = get_object_or_404(User, username=username)
         profile_account = Account.get_by_user(user=profile)
+        profile.user_avatar = profile_account.user_avatar
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)

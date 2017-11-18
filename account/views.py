@@ -1,9 +1,13 @@
+import os
+
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
-from account.forms import SignUpForm, LoginForm
+
+from account.forms import SignUpForm, LoginForm, SettingsForm
 from account.models import Account, Relationship
 
 
@@ -41,7 +45,14 @@ class AuthView:
                         login(request, user)
                         if 'keep_connected' in data:
                             request.session.set_expiry(0)
-                        return redirect(reverse('home'))
+                        next_page = request.GET.get('next', None)
+                        redirect_path = reverse('home')
+                        if next_page is not None and next_page != '':
+                            redirect_path = next_page
+                        user_account = Account.get_by_user(user=user)
+                        request.session['user_avatar'] = user_account.user_avatar
+                        request.session.save()
+                        return redirect(redirect_path)
                 except User.DoesNotExist:
                     pass
         return render(request, 'index.html', {'form': form})
@@ -65,6 +76,7 @@ class ProfileView:
     def posts(request, username):
         profile = get_object_or_404(User, username=username)
         profile_account = Account.get_by_user(user=profile)
+        profile.user_avatar = profile_account.user_avatar
         posts = profile_account.posts.filter(owner=profile_account)
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
@@ -73,9 +85,10 @@ class ProfileView:
 
     @staticmethod
     def following(request, username):
-        users = User.objects.filter(accounts__followers__owner__user__username=username)
         profile = get_object_or_404(User, username=username)
+        users = User.objects.filter(accounts__followers__owner__user__username=username)
         profile_account = Account.get_by_user(user=profile)
+        profile.user_avatar = profile_account.user_avatar
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
@@ -83,9 +96,10 @@ class ProfileView:
 
     @staticmethod
     def followers(request, username):
-        users = User.objects.filter(accounts__following__follow__user__username=username)
         profile = get_object_or_404(User, username=username)
+        users = User.objects.filter(accounts__following__follow__user__username=username)
         profile_account = Account.get_by_user(user=profile)
+        profile.user_avatar = profile_account.user_avatar
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
@@ -110,3 +124,39 @@ class ProfileView:
             follow = Account.get_by_username(username)
             owner.unfollow(follow)
             return redirect('profile', username)
+
+
+class SettingsView:
+    @staticmethod
+    @login_required
+    def settings(request):
+        user = request.user
+        form = None
+        if request.method == 'POST':
+            form = SettingsForm(request.POST)
+            if form.is_valid():
+                data = form.data
+                user.first_name = data['first_name']
+                user.last_name = data['last_name']
+                if data['password']:
+                    user.set_password(data['password'])
+                user.save()
+        return render(request, 'account/settings.html', {'settings': user, 'form': form})
+
+    @staticmethod
+    @login_required
+    def upload_avatar(request):
+        user = request.user
+        user_avatar = request.FILES.get('user_avatar', None)
+        if request.method == 'POST' and user_avatar:
+            ext = os.path.splitext(user_avatar.name)[1]
+            if ext.lower() in ['.jpg', '.jpeg', '.png']:
+                filename = user.username + '.jpg'
+                fs = FileSystemStorage()
+                if fs.exists(filename):
+                    fs.delete(filename)
+                fs.save(filename, user_avatar)
+                user_account = Account.get_by_user(user=user)
+                request.session['user_avatar'] = user_account.user_avatar
+                request.session.save()
+        return redirect('account_settings')

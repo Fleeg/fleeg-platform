@@ -1,6 +1,7 @@
 import requests
 
 from unittest.mock import patch
+
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
@@ -51,7 +52,7 @@ class TestLink(TestCase):
     @patch('link.utils.requests.head')
     @patch('link.utils.Article')
     def test_post_new_link_success(self, mock_article, mock_req):
-        mock_req.return_value.headers = {'Content-Type': 'text/html'}
+        mock_req.return_value.headers = {'Content-Type': 'text/plain'}
 
         mock_article.return_value.html = ''
         mock_article.return_value.text = 'text mock page'
@@ -89,6 +90,8 @@ class TestLink(TestCase):
             premiered 40 years ago. The timing was right for the
             British comedians (along with their token American, Terry Gilliam). '
             property="og:description"/>
+            <meta property="og:empty_tag"/>
+            <meta content="abc,123" property="og:tags"/>
             <meta content="CNN" property="og:site_name"/>
             <meta content="article" property="og:type"/>
             <meta content="http://i2.cdn.cnn.com/cnnnext/dam/assets/
