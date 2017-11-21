@@ -2,7 +2,7 @@ import copy
 
 from django.db import models
 from link import utils
-from account.models import Account, Relationship
+from account.models import Relationship
 
 
 class Post(models.Model):
