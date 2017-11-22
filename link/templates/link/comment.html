@@ -5,10 +5,12 @@
 {% for comment in post.comments.all %}
 <div style="font-size: 12px; color: #222; padding: 2px 7px;">
     <div class="fimage-publisher" style="width: 30px;">
-        <img src="{% static 'img/profile/default.jpg' %}" class="img-circle fimg-circle-small" />
+        <img src="{{ comment.owner.user_avatar }}" class="img-circle fimg-circle-small" />
     </div>
     <div style="margin: 0; display: inline-block">
-        <strong>{{ comment.owner.user.first_name }} {{ comment.owner.user.last_name }}</strong>
+        <a href="{% url 'profile' username=comment.owner.user.username %}" style="color: #222">
+            <strong>{{ comment.owner.user.first_name }} {{ comment.owner.user.last_name }}</strong>
+        </a>
         <span style="font-size:11px; color:#666;">{{ comment.created_at|timesince }} ago</span>
     </div>
     <div style="margin: -5px 0 0 34px;">{{ comment.text}}</div>

@@ -86,24 +86,24 @@ class ProfileView:
     @staticmethod
     def following(request, username):
         profile = get_object_or_404(User, username=username)
-        users = User.objects.filter(accounts__followers__owner__user__username=username)
+        accounts = Account.objects.filter(followers__owner__user__username=username)
         profile_account = Account.get_by_user(user=profile)
         profile.user_avatar = profile_account.user_avatar
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
-        return render(request, 'account/user.html', {'profile': profile, 'users': users})
+        return render(request, 'account/user.html', {'profile': profile, 'accounts': accounts})
 
     @staticmethod
     def followers(request, username):
         profile = get_object_or_404(User, username=username)
-        users = User.objects.filter(accounts__following__follow__user__username=username)
+        accounts = Account.objects.filter(following__follow__user__username=username)
         profile_account = Account.get_by_user(user=profile)
         profile.user_avatar = profile_account.user_avatar
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
-        return render(request, 'account/user.html', {'profile': profile, 'users': users})
+        return render(request, 'account/user.html', {'profile': profile, 'accounts': accounts})
 
     @staticmethod
     @login_required
