@@ -2,6 +2,7 @@ import copy
 
 from django.db import models
 from link import utils
+from account.models import Relationship
 
 
 class Post(models.Model):
@@ -40,7 +41,22 @@ class Post(models.Model):
         new_post.save()
 
     @staticmethod
-    def list_with_actions(username, user=None):
+    def feeds(username):
+        follower_ids = Relationship.objects.filter(
+            owner__user__username=username).values_list('follow_id', flat=True).distinct()
+        qs_reacted = Reaction.objects.filter(post=models.OuterRef('pk'),
+                                             owner__user__username=username)
+        qs_added = Post.objects.filter(origin=models.OuterRef('pk'),
+                                       owner__user__username=username)
+
+        return Post.objects.filter(
+            models.Q(owner_id__in=follower_ids) |
+            models.Q(owner__user__username=username)).annotate(
+            is_reacted=models.Exists(queryset=qs_reacted)).annotate(
+            is_added=models.Exists(queryset=qs_added)).order_by('-created_at')
+
+    @staticmethod
+    def links_by_user(username, user=None):
         qs_reactions = Reaction.objects.filter(post=models.OuterRef('pk'), owner=user)
         qs_added = Post.objects.filter(origin=models.OuterRef('pk'), owner=user)
 

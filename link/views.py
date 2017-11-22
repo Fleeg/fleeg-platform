@@ -18,14 +18,13 @@ class LinkView:
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
-        posts = Post.list_with_actions(username, session_account)
+        posts = Post.links_by_user(username, session_account)
         return render(request, 'link/link.html', {'profile': profile, 'posts': posts})
 
     @staticmethod
     @login_required
     def wall(request):
-        owner = request.user.accounts.first()
-        posts = Post.list_with_actions(request.user.username, owner)
+        posts = Post.feeds(request.user.username)
         return render(request, 'home.html', {'posts': posts})
 
     @staticmethod
