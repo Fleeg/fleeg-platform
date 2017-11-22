@@ -14,7 +14,7 @@
 
 <div class="container fprofile-wall">
     <ul class="nav nav-pills fmenu-profile">
-        <li id="profile-menu">
+        <li id="profile-menu" class="active">
             <a href="{% url 'profile' profile.username %}">
                 Profile
             </a>
@@ -43,10 +43,4 @@
         {% block profile-wall %}{% endblock %}
     </div>
 </div>
-
-<script>
-$(document).ready(function() {
-    highlightProfileMenu();
-});
-</script>
 {% endblock %}
