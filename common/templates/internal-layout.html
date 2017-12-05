@@ -40,10 +40,12 @@
             <div class="col-lg-3" style="margin: 10px; float:right;">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a class="dropdown-toggle" href="#" style="color:#222;padding:0;font-size:25px;margin-right:20px;">
+                        <a class="dropdown-toggle" href="{% url 'notifications' %}" style="color:#222;padding:0;font-size:25px;margin-right:20px;">
                             <span class="glyphicon glyphicon-bell"></span>
                             <div class="falert-number-bg">
-                                <div class="falert-number" id="notification-count">2</div>
+                            {% if notify_count %}
+                                <div class="falert-number" id="notification-count">{{ notify_count }}</div>
+                            {% endif %}
                             </div>
                         </a>
                     </li>

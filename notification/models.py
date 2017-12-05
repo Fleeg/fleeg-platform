@@ -9,6 +9,3 @@ class Notification(models.Model):
     viewed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    # TODO: IMPLEMENT QUERY TO GET NOTIFICATIONS CONTENTS
-    # TODO: IMPLEMENT QUERY TO GET UNREAD CONTENTS COUNT
