@@ -88,3 +88,21 @@ class Reaction(models.Model):
 
     def __str__(self):
         return self.owner.user.first_name + ' ' + self.owner.user.last_name
+
+
+class Path(models.Model):
+    owner = models.ForeignKey(to='account.Account')
+    posts = models.ManyToManyField(to='link.Post', related_name='paths')
+    name = models.CharField(max_length=200, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class Order(models.Model):
+    path = models.ForeignKey(to='link.Path')
+    post = models.ManyToManyField(to='link.Post', related_name='paths')
+    order = models.IntegerField(null=False)
+
+    class Meta:
+        unique_together = ('path', 'post',)
+        ordering = ('order',)
