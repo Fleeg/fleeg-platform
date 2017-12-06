@@ -1,4 +1,13 @@
+from enum import Enum
+
 from django.db import models
+
+
+class NotificationType(Enum):
+    ADD = 'ADD'
+    REACT = 'REACT'
+    COMMENT = 'COMMENT'
+    FOLLOW = 'FOLLOW'
 
 
 class Notification(models.Model):
@@ -9,3 +18,12 @@ class Notification(models.Model):
     viewed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @staticmethod
+    def check_as_viewed(owner):
+        Notification.objects.filter(owner=owner).update(viewed=True)
+
+    @staticmethod
+    def add(owner, sender, type, post=None):
+        notify = Notification(owner=owner, sender=sender, type=type.value, post=post)
+        notify.save()

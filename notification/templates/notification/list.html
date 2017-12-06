@@ -9,7 +9,8 @@
         {% for notification in notifications %}
             <!-- notification item -->
             <div class="fpublished-item">
-                <span>sender: {{ notification.sendr }}</span>
+                <span>owner: {{ notification.owner.user.username }}</span>
+                <span>sender: {{ notification.sender.user.username }}</span>
                 <span>post: {{ notification.post }}</span>
                 <span>type: {{ notification.type }}</span>
                 <span>viewed: {{ notification.viewed }}</span>
