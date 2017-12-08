@@ -1,4 +1,13 @@
+from enum import Enum
+
 from django.db import models
+
+
+class NotificationType(Enum):
+    ADD = 'ADD'
+    REACT = 'REACT'
+    COMMENT = 'COMMENT'
+    FOLLOW = 'FOLLOW'
 
 
 class Notification(models.Model):
@@ -11,8 +20,10 @@ class Notification(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     @staticmethod
-    def unread_count(username):
-        return Notification.objects.filter(viewed=False,
-                                           owner__user__username=username).count()
+    def check_as_viewed(owner):
+        Notification.objects.filter(owner=owner).update(viewed=True)
 
-    # TODO: IMPLEMENT QUERY TO GET NOTIFICATIONS CONTENTS
+    @staticmethod
+    def add(owner, sender, type, post=None):
+        notify = Notification(owner=owner, sender=sender, type=type.value, post=post)
+        notify.save()

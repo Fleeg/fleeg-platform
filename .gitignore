@@ -67,3 +67,6 @@ target/
 .idea
 #vscode
 .vscode
+
+# upload files
+media/

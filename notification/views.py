@@ -10,4 +10,7 @@ class NotificationView:
     def list(request):
         owner = request.user.accounts.first()
         notifications = Notification.objects.filter(owner=owner)
-        return render(request, 'home.html', {'notifications': notifications})
+        Notification.check_as_viewed(owner)
+        notify_count = 0
+        return render(request, 'notification/list.html', {'notifications': notifications,
+                                                          'notify_count': notify_count})

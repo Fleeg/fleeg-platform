@@ -1,0 +1,24 @@
+{% extends "internal-layout.html" %}
+{% block title %}Fleeg | {{ user.first_name }} {{ user.last_name }}{% endblock %}
+{% block content %}
+    {% include 'side-menu.html' %}
+    <!-- CONTENT -->
+    <div class="container fhome-wall" style="margin-top:50px;">
+        <h2>Notifications</h2>
+        <div class="item fwall-content">
+        {% for notification in notifications %}
+            <!-- notification item -->
+            <div class="fpublished-item">
+                <span>owner: {{ notification.owner.user.username }}</span>
+                <span>sender: {{ notification.sender.user.username }}</span>
+                <span>post: {{ notification.post }}</span>
+                <span>type: {{ notification.type }}</span>
+                <span>viewed: {{ notification.viewed }}</span>
+            </div>
+        {% empty %}
+            <div><span>No items yet.</span></div>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
