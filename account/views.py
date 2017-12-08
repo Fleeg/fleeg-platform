@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 from account.forms import SignUpForm, LoginForm, SettingsForm
 from account.models import Account, Relationship
+from notification.models import Notification, NotificationType
 
 
 class AuthView:
@@ -74,6 +75,7 @@ class AuthView:
 class ProfileView:
     @staticmethod
     def posts(request, username):
+        notify_count = None
         profile = get_object_or_404(User, username=username)
         profile_account = Account.get_by_user(user=profile)
         profile.user_avatar = profile_account.user_avatar
@@ -81,29 +83,37 @@ class ProfileView:
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
-        return render(request, 'profile.html', {'profile': profile, 'posts': posts})
+            notify_count = Notification.objects.filter(owner=session_account, viewed=False).count()
+        return render(request, 'profile.html', {'profile': profile, 'posts': posts,
+                                                'notify_count': notify_count})
 
     @staticmethod
     def following(request, username):
+        notify_count = None
         profile = get_object_or_404(User, username=username)
-        users = User.objects.filter(accounts__followers__owner__user__username=username)
+        accounts = Account.objects.filter(followers__owner__user__username=username)
         profile_account = Account.get_by_user(user=profile)
         profile.user_avatar = profile_account.user_avatar
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
-        return render(request, 'account/user.html', {'profile': profile, 'users': users})
+            notify_count = Notification.objects.filter(owner=session_account, viewed=False).count()
+        return render(request, 'account/user.html', {'profile': profile, 'accounts': accounts,
+                                                     'notify_count': notify_count})
 
     @staticmethod
     def followers(request, username):
+        notify_count = None
         profile = get_object_or_404(User, username=username)
-        users = User.objects.filter(accounts__following__follow__user__username=username)
+        accounts = Account.objects.filter(following__follow__user__username=username)
         profile_account = Account.get_by_user(user=profile)
         profile.user_avatar = profile_account.user_avatar
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
-        return render(request, 'account/user.html', {'profile': profile, 'users': users})
+            notify_count = Notification.objects.filter(owner=session_account, viewed=False).count()
+        return render(request, 'account/user.html', {'profile': profile, 'accounts': accounts,
+                                                     'notify_count': notify_count})
 
     @staticmethod
     @login_required
@@ -114,6 +124,7 @@ class ProfileView:
             relationship.follow = Account.get_by_username(username)
             if not relationship.owner.is_following(relationship.follow):
                 relationship.save()
+                Notification.add(relationship.follow, relationship.owner, NotificationType.FOLLOW)
             return redirect('profile', username)
 
     @staticmethod
@@ -141,7 +152,9 @@ class SettingsView:
                 if data['password']:
                     user.set_password(data['password'])
                 user.save()
-        return render(request, 'account/settings.html', {'settings': user, 'form': form})
+        notify_count = Notification.objects.filter(owner__user=user, viewed=False).count()
+        return render(request, 'account/settings.html', {'settings': user, 'form': form,
+                                                         'notify_count': notify_count})
 
     @staticmethod
     @login_required

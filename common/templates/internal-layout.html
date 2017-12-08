@@ -7,13 +7,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+              crossorigin="anonymous">
         <link href="{% static 'css/style.css' %}" rel="stylesheet" media="screen">
         <!-- scripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <script src="{% static 'js/fleeg.js' %}"></script>
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+                crossorigin="anonymous"></script>
   </head>
   <body style="margin-right:0;">
 	<!-- HEADER -->
@@ -27,7 +28,8 @@
             <div class="col-lg-5" style="margin-top:10px;">
                 <form onsubmit="return false;" id="form-search">
                 <div class="input-group">
-                  <input type="text" class="form-control flogin-input" name="text-search" id="input-search" placeholder="What are you searching?">
+                  <input type="text" class="form-control flogin-input" name="text-search"
+                         id="input-search" placeholder="What are you searching?">
                   <span class="input-group-btn">
                     <button class="btn btn-primary" type="button" style="padding:5.5px 30px; background-color:#468847; border-color: #398439;"
                          onclick="window.location.replace('/search?p='+$('#input-search').val());">
@@ -40,20 +42,18 @@
             <div class="col-lg-3" style="margin: 10px; float:right;">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown"
-                           href="javascript:void(0)" style="color:#222;padding:0;font-size:25px;margin-right:20px;">
+                        <a class="dropdown-toggle" href="{% url 'notifications' %}" style="color:#222;padding:0;font-size:25px;margin-right:20px;">
                             <span class="glyphicon glyphicon-bell"></span>
                             <div class="falert-number-bg">
-                                <div class="falert-number" id="notification-count"></div>
+                            {% if notify_count %}
+                                <div class="falert-number" id="notification-count">{{ notify_count }}</div>
+                            {% endif %}
                             </div>
                         </a>
-                        <ul class="dropdown-menu">
-                            <li id="notification-content"></li>
-                      </ul>
                     </li>
                     <li class="dropdown">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding:0;">
-                          <img src="{{ request.session.user_avatar }}" style="width:30px;"/>
+                          <img src="{{ request.session.user_avatar }}" style="width:30px; border: 1px solid #ccc;"/>
                           <strong style="color:#222;margin-right:20px;">{{ user.first_name }} {{ user.last_name }}</strong>
                       </a>
                       <ul class="dropdown-menu">
