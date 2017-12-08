@@ -15,14 +15,19 @@
                 </div>
                 <div style="display: inline-block;">
                     <div style="margin-top: 10px">
-                    <a href="{% url 'profile' username=notification.sender.user.username %}">
-                        {{ notification.sender.user.first_name }} {{ notification.sender.user.last_name }}
-                    </a>
-                    {{ notification.type }} your link
-                    <a href="#">
-                        {{ notification.post.title }}.
-                    </a>
-                    <div style="font-size: 12px">{{ notification.created_at|timesince }} ago</div>
+                        <a href="{% url 'profile' username=notification.sender.user.username %}">
+                            {{ notification.sender.user.first_name }} {{ notification.sender.user.last_name }}
+                        </a>
+                        {% if notification.type == 'FOLLOW' %}
+                            is {{ notification.type|lower }}ing you now.
+                            <div style="font-size: 12px">{{ notification.created_at|timesince }}</div>
+                        {% else %}
+                            {{ notification.type|lower }}ed your link
+                            <a href="#">
+                                {{ notification.post.title }}.
+                            </a>
+                            <div style="font-size: 12px">{{ notification.created_at|timesince }} ago.</div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

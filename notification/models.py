@@ -5,7 +5,7 @@ from django.db import models
 
 class NotificationType(Enum):
     ADD = 'ADD'
-    REACT = 'REACT'
+    REACT = 'LIKE'
     COMMENT = 'COMMENT'
     FOLLOW = 'FOLLOW'
 
