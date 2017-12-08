@@ -6,6 +6,7 @@ from account.models import Account
 from link.utils import LinkException
 from link.forms import URLForm, CommentForm
 from link.models import Post, Reaction
+from notification.models import Notification
 
 
 class LinkView:
@@ -18,14 +19,17 @@ class LinkView:
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
+            notify_count = Notification.unread_count(request.user)
         posts = Post.links_by_user(username, session_account)
-        return render(request, 'link/link.html', {'profile': profile, 'posts': posts})
+        return render(request, 'link/link.html', {'profile': profile, 'posts': posts,
+                                                  'notify_count': notify_count})
 
     @staticmethod
     @login_required
     def wall(request):
         posts = Post.feeds(request.user.username)
-        return render(request, 'home.html', {'posts': posts})
+        notify_count = Notification.unread_count(request.user)
+        return render(request, 'home.html', {'posts': posts, 'notify_count': notify_count})
 
     @staticmethod
     @login_required

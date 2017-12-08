@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from account.forms import SignUpForm, LoginForm, SettingsForm
 from account.models import Account, Relationship
 
+from notification.models import Notification
+
 
 class AuthView:
     @staticmethod
@@ -81,7 +83,9 @@ class ProfileView:
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
-        return render(request, 'profile.html', {'profile': profile, 'posts': posts})
+            notify_count = Notification.unread_count(request.user)
+        return render(request, 'profile.html', {'profile': profile, 'posts': posts,
+                                                'notify_count': notify_count})
 
     @staticmethod
     def following(request, username):
@@ -92,7 +96,9 @@ class ProfileView:
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
-        return render(request, 'account/user.html', {'profile': profile, 'accounts': accounts})
+            notify_count = Notification.unread_count(request.user)
+        return render(request, 'account/user.html', {'profile': profile, 'accounts': accounts,
+                                                     'notify_count': notify_count})
 
     @staticmethod
     def followers(request, username):
@@ -103,7 +109,9 @@ class ProfileView:
         if request.user.is_authenticated:
             session_account = Account.get_by_user(request.user)
             request.user.is_following = session_account.is_following(profile_account)
-        return render(request, 'account/user.html', {'profile': profile, 'accounts': accounts})
+            notify_count = Notification.unread_count(request.user)
+        return render(request, 'account/user.html', {'profile': profile, 'accounts': accounts,
+                                                     'notify_count': notify_count})
 
     @staticmethod
     @login_required
@@ -141,7 +149,9 @@ class SettingsView:
                 if data['password']:
                     user.set_password(data['password'])
                 user.save()
-        return render(request, 'account/settings.html', {'settings': user, 'form': form})
+        notify_count = Notification.unread_count(request.user)
+        return render(request, 'account/settings.html', {'settings': user, 'form': form,
+                                                         'notify_count': notify_count})
 
     @staticmethod
     @login_required

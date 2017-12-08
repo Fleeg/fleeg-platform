@@ -10,5 +10,9 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @staticmethod
+    def unread_count(username):
+        return Notification.objects.filter(viewed=False,
+                                           owner__user__username=username).count()
+
     # TODO: IMPLEMENT QUERY TO GET NOTIFICATIONS CONTENTS
-    # TODO: IMPLEMENT QUERY TO GET UNREAD CONTENTS COUNT
