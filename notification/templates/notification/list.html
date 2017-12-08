@@ -5,15 +5,26 @@
     <!-- CONTENT -->
     <div class="container fhome-wall" style="margin-top:50px;">
         <h2>Notifications</h2>
-        <div class="item fwall-content">
+        <div class="item" style="border-top: 1px solid #CCCCCC; padding-top: 10px">
         {% for notification in notifications %}
             <!-- notification item -->
-            <div class="fpublished-item">
-                <span>owner: {{ notification.owner.user.username }}</span>
-                <span>sender: {{ notification.sender.user.username }}</span>
-                <span>post: {{ notification.post }}</span>
-                <span>type: {{ notification.type }}</span>
-                <span>viewed: {{ notification.viewed }}</span>
+            <div style="border-bottom: 1px solid #CCCCCC; padding: 10px">
+                <div class="fimage-publisher">
+                    <img src="{{ notification.sender.user_avatar }}"
+                         class="img-circle fimg-circle" style="border: 1px solid #ccc"/>
+                </div>
+                <div style="display: inline-block;">
+                    <div style="margin-top: 10px">
+                    <a href="{% url 'profile' username=notification.sender.user.username %}">
+                        {{ notification.sender.user.first_name }} {{ notification.sender.user.last_name }}
+                    </a>
+                    {{ notification.type }} your link
+                    <a href="#">
+                        {{ notification.post.title }}.
+                    </a>
+                    <div style="font-size: 12px">{{ notification.created_at|timesince }} ago</div>
+                    </div>
+                </div>
             </div>
         {% empty %}
             <div><span>No items yet.</span></div>
