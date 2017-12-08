@@ -15,7 +15,6 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
                 crossorigin="anonymous"></script>
-        <script src="{% static 'js/fleeg.js' %}"></script>
   </head>
   <body style="margin-right:0;">
 	<!-- HEADER -->
@@ -44,9 +43,12 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a class="dropdown-toggle" href="{% url 'notifications' %}" style="color:#222;padding:0;font-size:25px;margin-right:20px;">
+                            <span class="glyphicon glyphicon-bell"></span>
+                            <div class="falert-number-bg">
                             {% if notify_count %}
                                 <div class="falert-number" id="notification-count">{{ notify_count }}</div>
                             {% endif %}
+                            </div>
                         </a>
                     </li>
                     <li class="dropdown">

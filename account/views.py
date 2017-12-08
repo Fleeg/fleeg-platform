@@ -11,8 +11,6 @@ from account.forms import SignUpForm, LoginForm, SettingsForm
 from account.models import Account, Relationship
 from notification.models import Notification, NotificationType
 
-from notification.models import Notification
-
 
 class AuthView:
     @staticmethod

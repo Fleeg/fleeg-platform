@@ -9,7 +9,7 @@ class NotificationView:
     @login_required
     def list(request):
         owner = request.user.accounts.first()
-        notifications = Notification.objects.filter(owner=owner)
+        notifications = Notification.objects.filter(owner=owner).order_by('-created_at')
         Notification.check_as_viewed(owner)
         notify_count = 0
         return render(request, 'notification/list.html', {'notifications': notifications,

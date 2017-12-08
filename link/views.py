@@ -7,7 +7,6 @@ from account.models import Account
 from link.utils import LinkException
 from link.forms import URLForm, CommentForm
 from link.models import Post, Reaction
-from notification.models import Notification
 
 
 class LinkView:
