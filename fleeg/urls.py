@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^account/', include('account.urls')),
     url(r'^link/', include('link.urls')),
     url(r'^notification/', include('notification.urls')),
+    url(r'^search/', include('search.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^(?P<username>\w+)/$', ProfileView.posts, name='profile'),
     url(r'^(?P<username>\w+)/following/$', ProfileView.following, name='following'),
