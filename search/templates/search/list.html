@@ -4,35 +4,91 @@
     {% include 'side-menu.html' %}
     <!-- CONTENT -->
     <div class="container fhome-wall" style="margin-top:50px;">
-        <h2>Search</h2>
+        <div style="margin-top: 30px;">
+            <h2 style="display: inline">Search</h2>
+            {% if search.results %}
+            <div style="display: inline-block; float: right; color: #747474">
+                <strong>{{ search.results | length }}</strong>
+                Results found.
+            </div>
+            {% endif %}
+        </div>
         <div class="item" style="border-top: 1px solid #CCCCCC; padding-top: 10px">
-        {% for notification in notifications %}
+        {% for result in search.results %}
             <!-- result item -->
             <div style="border-bottom: 1px solid #CCCCCC; padding: 10px">
-                <div class="fimage-publisher">
-                    <img src="{{ notification.sender.user_avatar }}"
-                         class="img-circle fimg-circle" style="border: 1px solid #ccc"/>
-                </div>
-                <div style="display: inline-block;">
-                    <div style="margin-top: 10px">
-                        <a href="{% url 'profile' username=notification.sender.user.username %}">
-                            {{ notification.sender.user.first_name }} {{ notification.sender.user.last_name }}
-                        </a>
-                        {% if notification.type == 'FOLLOW' %}
-                            is {{ notification.type|lower }}ing you now.
-                            <div style="font-size: 12px">{{ notification.created_at|timesince }}</div>
-                        {% else %}
-                            {{ notification.type|lower }}ed your link
-                            <a href="#">
-                                {{ notification.post.title }}.
-                            </a>
-                            <div style="font-size: 12px">{{ notification.created_at|timesince }} ago.</div>
-                        {% endif %}
+                {% if result.result_type == 'user' %}
+                    <div class="fimage-publisher">
+                        <img style="width: 100px;" src="{{ result.user_avatar }}" style="border: 1px solid #ccc"/>
                     </div>
-                </div>
+                    <div style="display: inline-block; margin-left: 70px">
+                        <div>
+                            <div>
+                            <a href="{% url 'profile' username=result.user.username %}" style="font-size: 18px">
+                                {{ result.user.first_name }} {{ result.user.last_name }}
+                            </a>
+                            </div>
+                            <div>@{{ result.user.username }}</div>
+                            <div style="font-size: 11px;">joined at {{ result.created_at|date:'M. d, Y' }}</div>
+                        </div>
+                    </div>
+                    <div style="float: right">
+                    {% if user != result.user %}
+                        {% if user.is_following %}
+                            <form method="POST" action="{% url 'account_unfollow' result.user.username %}">{% csrf_token %}
+                            <button type="submit" id="btn-unfollow" class="btn btn-default btn-large"
+                               style="font-size:16px; font-weight:900; padding: 7px 30px 7px 30px;">
+                                <span style="font-size:12px;" class="glyphicon glyphicon-ok"></span> Following
+                            </button>
+                            </form>
+                        {% else %}
+                            <form method="POST" action="{% url 'account_follow' result.user.username %}">{% csrf_token %}
+                            <button type="submit" id="btn-follow" class="btn btn-primary btn-large"
+                               style="font-size:16px; font-weight:900; padding: 7px 30px 7px 30px;
+                                            background-color: #468847; border-color: #398439;">
+                                <span style="font-size:12px;" class="glyphicon glyphicon-plus"></span> Follow
+                            </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                {% else %}
+                    <div class="fimage-publisher">
+                        <img style="width: 100px;" src="{{ result.image_url }}" style="border: 1px solid #ccc"/>
+                    </div>
+                    <div style="display: inline-block; margin-left: 70px">
+                        <div>
+                            <div>
+                                <a href="{{ result.url }}" target="_blank" title="{{ result.title }}" style="font-size: 18px"
+                                    title="{{ result.title }}" style="color:#000;">{{ result.title|truncatechars:95 }}</a>
+                            </div>
+
+                            <div style="font-size: 12px">{{ result.url|truncatechars:180 }}</div>
+                            {% if post.summary %}
+                            <div style="text-align: justify; font-size: 12px; padding: 20px 10px 10px 10px;">{{ result.summary }}</div>
+                            {% endif %}
+                            {% if result.tags %}
+                            <div style="text-align: justify; padding: 20px 10px 10px 10px; font-size: 11px;">
+                            <strong>Tags:</strong>
+                            {% for tag in result.get_tags_as_list %}
+                            <a href="#" style="text-decoration: underline; color: #222">{{ tag }}</a>
+                            {% endfor %}
+                            </div>
+                            {% endif %}
+                            <div style="font-size: 11px;">Published by
+                                <img src="{{ result.publisher.user_avatar }}"
+                                    class="img-circle" style="border: 1px solid #ccc; width: 20px"/>
+                                <a href="{% url 'profile' username=result.publisher.user.username %}" style="font-size: 12px">
+                                    {{ result.publisher.user.first_name }} {{ result.publisher.user.last_name }}
+                                </a>
+                                at {{ result.created_at|date:'M. d, Y' }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         {% empty %}
-            <div><span>No items yet.</span></div>
+            <div><span>No items found.</span></div>
         {% endfor %}
         </div>
     </div>
