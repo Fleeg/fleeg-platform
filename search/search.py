@@ -33,8 +33,7 @@ class Search:
         elif attr == 'tag':
             self.query_links_by_title()
         else:
-            # TODO: Throws a exception
-            print('attr not supported! try: user, title or tag')
+            raise SearchException('Attr not supported! try: user, title or tag')
 
     def query_users(self):
         accounts = Account.objects.filter(Q(user__username__in=self.words) |
@@ -75,3 +74,7 @@ class Search:
     def result_type(item, r_type):
         item.result_type = r_type
         return item
+
+
+class SearchException(Exception):
+    pass
