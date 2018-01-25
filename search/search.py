@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Value, CharField
 
 from account.models import Account
 from link.models import Post
@@ -64,13 +64,14 @@ class Search:
 
     def query_level(self, q_filter_link=None, q_filter_user=None):
         levels = [
-            {'link': Q(owner=self.owner), 'user': Q(id=self.owner.id)},
+            {'link': Q(owner=self.owner), 'user': Q(pk=self.owner)},
             {'link': Q(owner__followers__owner=self.owner), 'user': Q(followers__owner=self.owner)},
             {'link': Q(owner_followers__owner__followers__owner=self.owner),
              'user': Q(followers__owner__followers__owner=self.owner)},
         ]
         last_level = {'link': ~Q(levels[0]['link'] | levels[1]['link'] | levels[2]['link']),
                       'user': ~Q(levels[0]['user'] | levels[1]['user'] | levels[2]['user'])}
+
         if self.owner:
             for level in levels:
                 self.results += self.process_query(q_filter_link, q_filter_user, level)
@@ -86,16 +87,16 @@ class Search:
             level = {'link': Q(), 'user': Q()}
 
         if q_filter_link:
-            q_filter_link.add(level['link'])
+            q_filter_link.add(level['link'], Q.AND)
             level_results += Post.objects.filter(q_filter_link).annotate(
-                result_type='post').order_by('-created_at')
+                result_type=Value('post', CharField())).order_by('-created_at')
         if q_filter_user:
-            q_filter_user.add(level['user'])
+            q_filter_user.add(level['user'], Q.AND)
             level_results += Account.objects.filter(q_filter_user).annotate(
-                result_type='user').order_by('-created_at')
+                result_type=Value('user', CharField())).order_by('-created_at')
 
         if q_filter_link and q_filter_user:
-            level_results = sorted(level_results, key=lambda item: item['created_at'], reverse=True)
+            level_results = sorted(level_results, key=lambda item: item.created_at, reverse=True)
         return level_results
 
 
