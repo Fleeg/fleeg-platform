@@ -5,7 +5,8 @@ from link.models import Post
 
 
 class Search:
-    def __init__(self, query):
+    def __init__(self, query, owner=None):
+        self.owner = owner
         self.adv_separator = ':'
         self.results = []
         self.query_value = query
@@ -31,7 +32,7 @@ class Search:
         elif attr == 'title':
             self.query_links_by_title()
         elif attr == 'tag':
-            self.query_links_by_title()
+            self.query_links_by_tag()
         else:
             raise SearchException('Attr not supported! try: user, title or tag')
 
@@ -70,10 +71,25 @@ class Search:
         posts = Post.objects.filter(q_filters)
         self.results += list(map(lambda i: self.result_type(i, 'post'), posts))
 
-    @staticmethod
-    def result_type(item, r_type):
-        item.result_type = r_type
-        return item
+    def link_sort_by_level(self):
+        my = Q(owner=self.owner)
+        following = Q(owner__followers__owner=self.owner)
+        following_follow = Q(owner_followers__owner__followers__owner=self.owner)
+        not_follow = Q(my | following | following_follow)
+
+    def user_sort_by_level(self):
+        my = Q(id=self.owner.id)
+        following = Q(followers__owner=self.owner)
+        following__follow = Q(followers__owner__followers__owner=self.owner)
+        not_follow = Q(my | following | following__follow)
+
+    def process_link_query(self, q_level_filter, q_filter):
+        return Post.objects.filter(q_level_filter).filter(q_filter).annotate(
+            result_type='post').order_by('-created_at')
+
+    def process_user_query(self, q_level_filter, q_filter):
+        return Account.objects.filter(q_level_filter).filter(q_filter).annotate(
+            result_type='user').order_by('-created_at')
 
 
 class SearchException(Exception):
