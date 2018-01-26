@@ -36,9 +36,12 @@ class Search:
             raise SearchException('Attr not supported! try: user, title or tag')
 
     def filter_users(self):
-        return Q(Q(user__username__in=self.words) |
-                 Q(user__first_name__in=self.words) |
-                 Q(user__last_name__in=self.words))
+        q_filters = Q()
+        for word in self.words:
+            q_filters.add(Q(user__username__icontains=word), Q.OR)
+            q_filters.add(Q(user__first_name__icontains=word), Q.OR)
+            q_filters.add(Q(user__last_name__icontains=word), Q.OR)
+        return q_filters
 
     def filter_links(self):
         q_filters = Q()
@@ -64,9 +67,9 @@ class Search:
 
     def query_level(self, q_filter_link=None, q_filter_user=None):
         levels = [
-            {'link': Q(owner=self.owner), 'user': Q(pk=self.owner)},
-            {'link': Q(owner__followers__owner=self.owner), 'user': Q(followers__owner=self.owner)},
-            {'link': Q(owner_followers__owner__followers__owner=self.owner),
+            {'link': Q(owner=self.owner), 'user': Q(pk=(self.owner.pk if self.owner else None))},
+            {'link': Q(owner__following__follow=self.owner), 'user': Q(followers__owner=self.owner)},
+            {'link': Q(owner__followers__owner__followers__owner=self.owner),
              'user': Q(followers__owner__followers__owner=self.owner)},
         ]
         last_level = {'link': ~Q(levels[0]['link'] | levels[1]['link'] | levels[2]['link']),
@@ -82,6 +85,8 @@ class Search:
     @staticmethod
     def process_query(q_filter_link=None, q_filter_user=None, level=None):
         level_results = []
+
+        # TODO: Remove duplicated items
 
         if level is None:
             level = {'link': Q(), 'user': Q()}
