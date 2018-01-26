@@ -68,7 +68,7 @@ class Search:
     def query_level(self, q_filter_link=None, q_filter_user=None):
         levels = [
             {'link': Q(owner=self.owner), 'user': Q(pk=(self.owner.pk if self.owner else None))},
-            {'link': Q(owner__following__follow=self.owner), 'user': Q(followers__owner=self.owner)},
+            {'link': Q(owner__following__owner=self.owner), 'user': Q(followers__owner=self.owner)},
             {'link': Q(owner__followers__owner__followers__owner=self.owner),
              'user': Q(followers__owner__followers__owner=self.owner)},
         ]
