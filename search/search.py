@@ -68,7 +68,7 @@ class Search:
     def query_level(self, q_filter_link=None, q_filter_user=None):
         levels = [
             {'link': Q(owner=self.owner), 'user': Q(pk=(self.owner.pk if self.owner else None))},
-            {'link': Q(owner__following__owner=self.owner), 'user': Q(followers__owner=self.owner)},
+            {'link': Q(owner__followers__owner=self.owner), 'user': Q(followers__owner=self.owner)},
             {'link': Q(owner__followers__owner__followers__owner=self.owner),
              'user': Q(followers__owner__followers__owner=self.owner)},
         ]
@@ -86,18 +86,14 @@ class Search:
     def process_query(q_filter_link=None, q_filter_user=None, level=None):
         level_results = []
 
-        # TODO: Remove duplicated items
-
         if level is None:
             level = {'link': Q(), 'user': Q()}
 
         if q_filter_link:
-            q_filter_link.add(level['link'], Q.AND)
-            level_results += Post.objects.filter(q_filter_link).annotate(
+            level_results += Post.objects.filter(q_filter_link, level['link']).annotate(
                 result_type=Value('post', CharField())).order_by('-created_at')
         if q_filter_user:
-            q_filter_user.add(level['user'], Q.AND)
-            level_results += Account.objects.filter(q_filter_user).annotate(
+            level_results += Account.objects.filter(q_filter_user, level['user']).annotate(
                 result_type=Value('user', CharField())).order_by('-created_at')
 
         if q_filter_link and q_filter_user:
