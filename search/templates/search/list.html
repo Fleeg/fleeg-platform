@@ -1,0 +1,95 @@
+{% extends "internal-layout.html" %}
+{% block title %}Fleeg | {{ user.first_name }} {{ user.last_name }}{% endblock %}
+{% block content %}
+    {% include 'side-menu.html' %}
+    <!-- CONTENT -->
+    <div class="container fhome-wall" style="margin-top:50px;">
+        <div style="margin-top: 30px;">
+            <h2 style="display: inline">Search</h2>
+            {% if search.results %}
+            <div style="display: inline-block; float: right; color: #747474">
+                <strong>{{ search.results | length }}</strong>
+                Results found.
+            </div>
+            {% endif %}
+        </div>
+        <div class="item" style="border-top: 1px solid #CCCCCC; padding-top: 10px">
+        {% for result in search.results %}
+            <!-- result item -->
+            <div style="border-bottom: 0px solid #CCCCCC; padding: 10px">
+                {% if result.result_type == 'user' %}
+                    <div style="display: inline-block; vertical-align:top; border: 1px solid #eee">
+                        <img src="{{ result.user_avatar }}" style="width: 100px;"/>
+                    </div>
+                    <div style="display: inline-block; margin-left: 20px">
+                        <div>
+                            <div>
+                            <a href="{% url 'profile' username=result.user.username %}" style="font-size: 18px">
+                                {{ result.user.first_name }} {{ result.user.last_name }}
+                            </a>
+                            </div>
+                            <div>@{{ result.user.username }}</div>
+                            <div style="font-size: 11px;">joined at {{ result.created_at|date:'M. d, Y' }}</div>
+                        </div>
+                    </div>
+                    <div style="float: right">
+                    {% if user != result.user %}
+                        {% if user.is_following %}
+                            <form method="POST" action="{% url 'account_unfollow' result.user.username %}">{% csrf_token %}
+                            <button type="submit" id="btn-unfollow" class="btn btn-default btn-large"
+                               style="font-size:16px; font-weight:900; padding: 7px 30px 7px 30px;">
+                                <span style="font-size:12px;" class="glyphicon glyphicon-ok"></span> Following
+                            </button>
+                            </form>
+                        {% else %}
+                            <form method="POST" action="{% url 'account_follow' result.user.username %}">{% csrf_token %}
+                            <button type="submit" id="btn-follow" class="btn btn-primary btn-large"
+                               style="font-size:16px; font-weight:900; padding: 7px 30px 7px 30px;
+                                            background-color: #468847; border-color: #398439;">
+                                <span style="font-size:12px;" class="glyphicon glyphicon-plus"></span> Follow
+                            </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                {% else %}
+                    <div style="display: inline-block; vertical-align:top; border: 1px solid #eee"">
+                        <img src="{{ result.image_url }}" style="width: 100px;"/>
+                    </div>
+                    <div style="display: inline-block; margin-left: 20px">
+                        <div style="max-width: 450px;">
+                            <div>
+                                <a href="{{ result.url }}" target="_blank" title="{{ result.title }}" style="font-size: 18px"
+                                    title="{{ result.title }}">{{ result.title|truncatechars:95 }}</a>
+                            </div>
+                            <div style="font-size: 12px; color: #468847">{{ result.url|truncatechars:180 }}</div>
+                            {% if result.summary %}
+                            <div style="text-align: justify; font-size: 12px; padding-top: 10px;">{{ result.summary }}</div>
+                            {% endif %}
+                            {% if result.tags %}
+                            <div style="text-align: justify; padding-top: 10px; font-size: 11px;">
+                            <strong>Tags:</strong>
+                            {% for tag in result.get_tags_as_list %}
+                            <a href="{% url 'search' %}?q=tag:{{ tag }}" style="text-decoration: underline; color: #222">{{ tag }}</a>
+                            {% endfor %}
+                            </div>
+                            {% endif %}
+                            <div style="font-size: 11px; padding-top: 10px;">Published by
+                                <img src="{{ result.publisher.user_avatar }}"
+                                    class="img-circle" style="border: 1px solid #ccc; width: 20px"/>
+                                <a href="{% url 'profile' username=result.publisher.user.username %}" style="font-size: 12px">
+                                    {{ result.publisher.user.first_name }} {{ result.publisher.user.last_name }}
+                                </a>
+                                at {{ result.created_at|date:'M. d, Y' }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% empty %}
+            <div><span>No items found.</span></div>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+

@@ -94,7 +94,7 @@ menu {
 	z-index: 1;
 	width: 220px;
 	height: 100%;
-	padding: 60px 0 0;
+	padding: 70px 0 0;
 	background: #222;
 	margin:0;
 }
@@ -282,6 +282,11 @@ footer{
 	height: 50px;
 }
 
+.fimg-circle-small {
+    width: 30px;
+    height: 30px;
+}
+
 /*wall*/
 .fwall-content {
 	width: 460px;
@@ -367,10 +372,10 @@ footer{
     min-width: 14px;
     padding: 0 2px;
     position: absolute;
-    right: 0;
+    right: -5px;
     text-align: center;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    top: 0;
+    top: 10px;
     /*visibility: hidden;*/
     z-index: 990;
 }

@@ -41,6 +41,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='own_posts', to='account.Account')),
                 ('publisher', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='posts', to='account.Account')),
+                ('origin', models.ForeignKey(to='link.Post', related_name='adds', null=True)),
             ],
         ),
         migrations.CreateModel(

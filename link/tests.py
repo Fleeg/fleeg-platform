@@ -1,15 +1,18 @@
 import requests
 
 from unittest.mock import patch
+
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
 from account.factories import AccountFactory, DEFAULT_PASSWORD
-from link.factories import PostFactory
+from link.factories import PostFactory, ReactionFactory
 
 
 class TestLink(TestCase):
     def setUp(self):
+        self.other_user = AccountFactory.create()
+        self.other_user_post = PostFactory.create(owner=self.other_user, publisher=self.other_user)
         self.account = AccountFactory.create()
         self.user = self.account.user
         [PostFactory.create(owner=self.account, publisher=self.account) for _ in range(2)]
@@ -49,7 +52,7 @@ class TestLink(TestCase):
     @patch('link.utils.requests.head')
     @patch('link.utils.Article')
     def test_post_new_link_success(self, mock_article, mock_req):
-        mock_req.return_value.headers = {'Content-Type': 'text/html'}
+        mock_req.return_value.headers = {'Content-Type': 'text/plain'}
 
         mock_article.return_value.html = ''
         mock_article.return_value.text = 'text mock page'
@@ -87,6 +90,8 @@ class TestLink(TestCase):
             premiered 40 years ago. The timing was right for the
             British comedians (along with their token American, Terry Gilliam). '
             property="og:description"/>
+            <meta property="og:empty_tag"/>
+            <meta content="abc,123" property="og:tags"/>
             <meta content="CNN" property="og:site_name"/>
             <meta content="article" property="og:type"/>
             <meta content="http://i2.cdn.cnn.com/cnnnext/dam/assets/
@@ -107,3 +112,40 @@ class TestLink(TestCase):
         response = self.client.post(reverse('link_new'), data={'url': url_post})
         self.assertRedirects(response, reverse('home'))
         self.assertEqual(self.account.posts.all().count(), 3)
+
+    def test_add_as_my_link_from_post(self):
+        url = '{0}?next={1}'.format(reverse('link_add', args=[self.other_user_post.id]),
+                                    reverse('home'))
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(url)
+        self.assertRedirects(response, reverse('home'))
+
+    def test_react_on_post(self):
+        url = '{0}?next={1}'.format(reverse('link_react', args=[self.other_user_post.id]),
+                                    reverse('home'))
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(url)
+        self.assertRedirects(response, reverse('home'))
+
+    def test_unreact_on_post(self):
+        post_with_reaction = PostFactory.create(owner=self.other_user, publisher=self.other_user,)
+        ReactionFactory.create(owner=self.account, post=post_with_reaction)
+        url = '{0}?next={1}'.format(reverse('link_unreact', args=[post_with_reaction.id]),
+                                    reverse('home'))
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(url)
+        self.assertRedirects(response, reverse('home'))
+
+    def test_comment_post_with_no_message(self):
+        url = '{0}?next={1}'.format(reverse('link_comment', args=[self.other_user_post.id]),
+                                    reverse('home'))
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(url)
+        self.assertRedirects(response, reverse('home'))
+
+    def test_comment_post(self):
+        url = '{0}?next={1}'.format(reverse('link_comment', args=[self.other_user_post.id]),
+                                    reverse('home'))
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.post(url, data={'text': 'my comment'})
+        self.assertRedirects(response, reverse('home'))

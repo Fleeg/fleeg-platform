@@ -1,0 +1,13 @@
+<form id="form-search" action="{% url 'search' %}">
+    <div class="input-group">
+        <input type="text" class="form-control flogin-input" name="q" value="{{ search.query_value }}" required="required"
+             id="input-search" placeholder="What are you searching? [ Advance Search user:john, title:smart link or tag:idea ]">
+        <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary"
+                   style="padding:5.5px 30px; background-color:#468847; border-color: #398439;">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </span>
+    </div>
+    <input type="checkbox" name="anonymous" value="1"> <span style="font-size: 10px"> Anonymous Search</span>
+</form>

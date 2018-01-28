@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'common',
     'account',
     'link',
+    'notification',
+    'search',
 ]
 
 MIDDLEWARE = [
@@ -115,7 +117,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'common/static'),
+    os.path.join(BASE_DIR, 'media'),
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/avatar')
+
 
 if TESTING:
     # ADD NOSE TO TEST AND COVERAGE APPS
