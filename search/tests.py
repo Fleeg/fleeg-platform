@@ -92,3 +92,11 @@ class TestSearch(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'search/list.html')
         self.assertEqual(len(search.results), 0)
+
+    def test_advanced_search_empty_value(self):
+        self.client.login(username=self.user.username, password=DEFAULT_PASSWORD)
+        response = self.client.get(reverse('search'), {'q': 'type:'})
+        search = response.context['search']
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'search/list.html')
+        self.assertEqual(len(search.results), 0)
