@@ -42,7 +42,7 @@
         <div style="text-align: justify; padding: 20px 10px 10px 10px; font-size: 11px;">
         <strong>Tags:</strong>
         {% for tag in post.get_tags_as_list %}
-        <a href="#" style="text-decoration: underline; color: #222">{{ tag }}</a>
+        <a href="{% url 'search' %}?q=tag:{{ tag }}" style="text-decoration: underline; color: #222">{{ tag }}</a>
         {% endfor %}
         </div>
         {% endif %}
