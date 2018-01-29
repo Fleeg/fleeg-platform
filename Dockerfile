@@ -1,5 +1,7 @@
 FROM python:3
 
+# Add env with sercret that can be recived by docker run
+
 ENV PYTHONUNBUFFERED 1
 
 # Add folders
@@ -17,10 +19,10 @@ ADD fleeg/wsgi.py fleeg/wsgi.py
 
 # Add manage files
 ADD manage.py manage.py
-ADD requirements requirements
+ADD requirements requirements.txt
 
 # Install dependecies
-RUN pip install -r requirements
+RUN pip install -r requirements.txt
 
 # Apply app migrations
 RUN python manage.py migrate
