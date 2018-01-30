@@ -8,7 +8,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@kih_p6c%p4f5)wz5z4y=pn$t5e=$7!89g6bg(r8-*s#er((bw'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY',
+                       '@kih_p6c%p4f5)wz5z4y=pn$t5e=$7!89g6bg(r8-*s#er((bw')
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -120,6 +121,5 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'staticfiles'))
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/avatar')
