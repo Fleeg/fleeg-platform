@@ -7,12 +7,12 @@
 <div style="display:block; margin-top:70px;"></div>
 {% endif %}
 <div class="container" style="padding:100px;">
-<div class="col-lg-5" style="margin-left:80px;">
+<div class="col-lg-5" style="margin-left:80px; margin-top:80px;">
 <h1><strong>{{ code }}</strong> - {{ message }}.</h1>
 <p><a href="{%  url 'index' %}">go to home</a></p>
 </div>
 <div class="col-lg-5">
-<img src="{% static 'img/logo.png' %}" />
+<img src="{% static 'img/error.png' %}" />
 </div>
 </div>
 {% endblock %}
