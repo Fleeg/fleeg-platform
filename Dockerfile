@@ -22,11 +22,7 @@ ADD common common
 ADD link link
 ADD notification notification
 ADD search search
-
-# Add config files
-ADD fleeg/settings.prod.py fleeg/settings.py
-ADD fleeg/urls.py fleeg/urls.py
-ADD fleeg/wsgi.py fleeg/wsgi.py
+ADD fleeg fleeg
 
 # Add manage files
 ADD manage.py manage.py
