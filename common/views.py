@@ -32,7 +32,7 @@ class ErrorView:
 
     @staticmethod
     def stringify(obj):
-        return "<" + type(obj).__name__ + "> " + pformat(vars(obj), indent=4, width=1)
+        return '<' + type(obj).__name__ + '> ' + pformat(vars(obj), indent=4, width=1)
 
 
 logging.basicConfig(filename='app.log', level=logging.ERROR)
