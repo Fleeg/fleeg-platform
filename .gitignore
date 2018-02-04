@@ -70,3 +70,6 @@ target/
 
 # upload files
 media/
+
+# generated static files
+staticfiles/

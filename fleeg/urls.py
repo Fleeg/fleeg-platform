@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^notification/', include('notification.urls')),
     url(r'^search/', include('search.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^(?P<username>\w+)/$', ProfileView.posts, name='profile'),
+    url(r'^(?P<username>\w+)/$', LinkView.links, name='profile'),
     url(r'^(?P<username>\w+)/following/$', ProfileView.following, name='following'),
     url(r'^(?P<username>\w+)/followers/$', ProfileView.followers, name='followers'),
     url(r'^(?P<username>\w+)/links/$', LinkView.links, name='links'),
