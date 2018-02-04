@@ -13,8 +13,8 @@ SECRET_KEY = os.getenv('APP_SECRET_KEY',
                        '@kih_p6c%p4f5)wz5z4y=pn$t5e=$7!89g6bg(r8-*s#er((bw')
 
 # SECURITY WARNING: don't run with debug or testing turned on in production!
-DEBUG = True if 'runserver' in sys.argv else False
 TESTING = True if 'test' in sys.argv else False
+DEBUG = True if 'runserver' or TESTING in sys.argv else False
 
 ALLOWED_HOSTS = ['*']
 
