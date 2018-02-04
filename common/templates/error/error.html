@@ -1,44 +1,18 @@
+{% extends user.is_authenticated|yesno:"internal-layout.html,external-layout.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-        <meta charset="utf-8">
-        <title>Fleeg | Error</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <link href="{% static 'css/style.css' %}" rel="stylesheet" media="screen">
-        <!-- scripts -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <script src="{% static 'js/fleeg.js' %}"></script>
-  </head>
-<body>
+{% block title %}Fleeg | Error{% endblock %}
+{% block content %}
+<!-- CONTENT -->
+{% if user.is_authenticated %}
+<div style="display:block; margin-top:70px;"></div>
+{% endif %}
 <div class="container" style="padding:100px;">
-<div class="col-lg-5" style="margin-left:80px;">
-<a href="{% url 'index' %}">
-    <img src="{% static 'img/logo.png' %}"/>
-</a>
-<h1><strong>404</strong> - That's an error.</h1>
-<p>What you were looking for is just not there.</p>
+<div class="col-lg-7" style="margin-top:80px;">
+<h1><strong>{{ code }}</strong> - {{ message }}.</h1>
 <p><a href="{%  url 'index' %}">go to home</a></p>
 </div>
 <div class="col-lg-5">
-<img src="{% static 'img/icon_error.png' %}" style="width:400px;"/>
+<img src="{% static 'img/error.png' %}" />
 </div>
 </div>
-<!-- FOOTER -->
-<footer>
-    <div class="container">
-        <hr class="ffooter">
-        <p class="pull-right">
-            <a href="#" style="color: #222">Privacy policy</a> ·
-            <a href="#" style="color: #222">Terms of Use</a>
-        </p>
-        <p>© {% now 'Y' %} Fleeg, FOSS.</p>
-    </div>
-</footer>
-</body>
-</html>
+{% endblock %}
