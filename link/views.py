@@ -22,7 +22,7 @@ class LinkView:
             request.user.is_following = session_account.is_following(profile_account)
             notify_count = Notification.objects.filter(owner=session_account, viewed=False).count()
         posts = Post.links_by_user(username, session_account)
-        return render(request, 'link/link.html', {'profile': profile, 'posts': posts,
+        return render(request, 'link/link.html', {'profile': profile, 'posts': posts, 'links': True,
                                                   'notify_count': notify_count})
 
     @staticmethod

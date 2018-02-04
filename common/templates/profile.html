@@ -10,25 +10,14 @@
 
 <div class="container fprofile-wall">
     <ul class="nav nav-pills fmenu-profile">
-        <li id="profile-menu" class="active">
-            <a href="{% url 'profile' profile.username %}">
-                Profile
-            </a>
+        <li id="links-menu" {% if links %}class="active"{% endif %}>
+            <a href="{% url 'links' profile.username %}">+ Links</a>
         </li>
-        <li id="links-menu">
-            <a href="{% url 'links' profile.username %}"> + Links
-                <div class="fstatus-number">{{ posts|length }}</div>
-            </a>
+        <li id="followers-menu" {% if followers %}class="active"{% endif %}>
+            <a href="{% url 'followers' profile.username %}">Followers</a>
         </li>
-        <li id="followers-menu">
-            <a href="{% url 'followers' profile.username %}">Followers
-                <div class="fstatus-number">{{ users|length }}</div>
-            </a>
-        </li>
-        <li id="following-menu">
-            <a href="{% url 'following' profile.username %}">Following
-                <div class="fstatus-number">{{ users|length }}</div>
-            </a>
+        <li id="following-menu" {% if following %}class="active"{% endif %}>
+            <a href="{% url 'following' profile.username %}">Following</a>
         </li>
     </ul>
     <hr class="fmenu-profile-line" />
