@@ -74,20 +74,6 @@ class AuthView:
 
 class ProfileView:
     @staticmethod
-    def posts(request, username):
-        notify_count = None
-        profile = get_object_or_404(User, username=username)
-        profile_account = Account.get_by_user(user=profile)
-        profile.user_avatar = profile_account.user_avatar
-        posts = profile_account.posts.filter(owner=profile_account)
-        if request.user.is_authenticated:
-            session_account = Account.get_by_user(request.user)
-            request.user.is_following = session_account.is_following(profile_account)
-            notify_count = Notification.objects.filter(owner=session_account, viewed=False).count()
-        return render(request, 'profile.html', {'profile': profile, 'posts': posts,
-                                                'notify_count': notify_count})
-
-    @staticmethod
     def following(request, username):
         notify_count = None
         profile = get_object_or_404(User, username=username)
@@ -99,6 +85,7 @@ class ProfileView:
             request.user.is_following = session_account.is_following(profile_account)
             notify_count = Notification.objects.filter(owner=session_account, viewed=False).count()
         return render(request, 'account/user.html', {'profile': profile, 'accounts': accounts,
+                                                     'following': True,
                                                      'notify_count': notify_count})
 
     @staticmethod
@@ -113,6 +100,7 @@ class ProfileView:
             request.user.is_following = session_account.is_following(profile_account)
             notify_count = Notification.objects.filter(owner=session_account, viewed=False).count()
         return render(request, 'account/user.html', {'profile': profile, 'accounts': accounts,
+                                                     'followers': True,
                                                      'notify_count': notify_count})
 
     @staticmethod
