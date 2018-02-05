@@ -4,17 +4,26 @@ LABEL version="v0.2-alpha"
 LABEL vendor="Fleeg Platform"
 LABEL source="https://github.com/fleeg"
 
+# Standalone turn on is run database and app inside same docker
+ARG standalone="FALSE"
+
 # Send proxy configuration if necessary
 ARG proxy
 ENV https_proxy=$proxy
 
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONUSERBASE '/fleeg'
 
-# create app folder
-RUN mkdir -p app/fleeg
-RUN mkdir -p app/media
+# Install gunicorn server
+RUN pip install gunicorn
 
-WORKDIR app
+# Add application user
+RUN useradd fleeg -md /fleeg
+USER fleeg
+
+# Create app folder
+RUN mkdir -p /fleeg/app/media
+WORKDIR /fleeg/app
 
 # Add folders
 ADD account account
@@ -29,19 +38,30 @@ ADD manage.py manage.py
 ADD requirements requirements
 
 # Install dependecies
-RUN pip install -r requirements --trusted-host pypi.python.org
-
-# Apply app migrations
-RUN python manage.py migrate
+RUN if [ ! $proxy ]; then \
+        pip install -r requirements --user --no-cache-dir; \
+    else \
+        pip install -r requirements --user --no-cache-dir --trusted-host pypi.python.org; \
+    fi
 
 # Genrate static files
 RUN python manage.py collectstatic --noinput
 
-# set a health check
+# Apply app migrations or add to startup
+RUN if [ "$standalone" != "FALSE" ]; then \
+        python manage.py migrate; \
+    else \
+        echo 'python manage.py migrate' > startup.sh; \
+    fi
+
+# Add run in startup.sh file
+RUN echo 'gunicorn fleeg.wsgi -w 2 -b :8000' >> startup.sh && chmod +x startup.sh
+
+# Set a health check
 HEALTHCHECK --interval=5s \
             --timeout=5s \
             CMD curl -f http://127.0.0.1:8000 || exit 1
 
 EXPOSE 8000
 
-ENTRYPOINT ["gunicorn","fleeg.wsgi", "-w 2", "-b :8000"]
+ENTRYPOINT ./startup.sh
