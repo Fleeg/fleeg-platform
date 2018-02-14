@@ -43,7 +43,15 @@ RUN if [ "$standalone" != "FALSE" ]; then \
 # Add run in startup.sh file
 RUN echo "gunicorn fleeg.wsgi -w 2 -b :8000" >> startup.sh && chmod +x startup.sh
 
-# set a health check
+# Create data folder for link load
+RUN mkdir /.newspaper_scraper && chmod -R a+rwx /.newspaper_scraper
+
+# Add permission for non root user
+RUN chmod -R a+rwx /app
+
+USER 1001
+
+# Set a health check
 HEALTHCHECK --interval=5s \
             --timeout=5s \
             CMD curl -f http://127.0.0.1:8000 || exit 1
