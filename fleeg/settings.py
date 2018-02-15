@@ -14,7 +14,7 @@ SECRET_KEY = os.getenv('APP_SECRET_KEY',
 
 # SECURITY WARNING: don't run with debug or testing turned on in production!
 TESTING = True if 'test' in sys.argv else False
-DEBUG = True if 'runserver' or TESTING in sys.argv else False
+DEBUG = True if 'runserver' in sys.argv or TESTING else False
 
 ALLOWED_HOSTS = ['*']
 
@@ -76,7 +76,7 @@ engines = {
 
 DATABASES = {
     'default': {
-        'ENGINE': engines.get(os.getenv('DATABASE_ENGINE'), engines['sqlite']),
+        'ENGINE': engines.get(os.getenv('DATABASE_ENGINE', 'sqlite')),
         'NAME': os.getenv('DATABASE_NAME', os.path.join(BASE_DIR, 'db.sqlite3')),
         'USER': os.getenv('DATABASE_USER'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD'),

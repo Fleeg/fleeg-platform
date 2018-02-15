@@ -12,18 +12,10 @@ ARG proxy
 ENV https_proxy=$proxy
 
 ENV PYTHONUNBUFFERED 1
-ENV PYTHONUSERBASE '/fleeg'
-
-# Install gunicorn server
-RUN pip install gunicorn
-
-# Add application user
-RUN useradd fleeg -md /fleeg
-USER fleeg
 
 # Create app folder
-RUN mkdir -p /fleeg/app/media
-WORKDIR /fleeg/app
+RUN mkdir -p app/media
+WORKDIR app
 
 # Add folders
 ADD account account
@@ -39,9 +31,9 @@ ADD requirements requirements
 
 # Install dependecies
 RUN if [ ! $proxy ]; then \
-        pip install -r requirements --user --no-cache-dir; \
+        pip install -r requirements; \
     else \
-        pip install -r requirements --user --no-cache-dir --trusted-host pypi.python.org; \
+        pip install -r requirements --trusted-host pypi.python.org; \
     fi
 
 # Genrate static files
@@ -56,6 +48,14 @@ RUN if [ "$standalone" != "FALSE" ]; then \
 
 # Add run in startup.sh file
 RUN echo 'gunicorn fleeg.wsgi -w 2 -b :8000' >> startup.sh && chmod +x startup.sh
+
+# Create data folder for link load
+RUN mkdir /.newspaper_scraper && chmod -R a+rwx /.newspaper_scraper
+
+# Add permission for non root user
+RUN chmod -R a+rwx /app
+
+USER 1001
 
 # Set a health check
 HEALTHCHECK --interval=5s \
