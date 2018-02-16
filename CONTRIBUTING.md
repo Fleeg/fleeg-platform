@@ -1,7 +1,9 @@
 # Fleeg Contributings
 
 ### Contributor License Agreement
-The Contributor License Agreement (CLA) ensures that the Fleeg has clear license to all its contributions, which in turns lets us guarantee to users that we have no "stray" intellectual property or differently-licensed material.
+The Contributor License Agreement (CLA) ensures that the Fleeg has clear license to all its 
+contributions, which in turns lets us guarantee to users that we have no "stray" intellectual 
+property or differently-licensed material.
 
 When you make a contribution to the Fleeg project, you agree:
 
@@ -15,12 +17,14 @@ By submitting a pull request to Fleeg project you agree to the above statements.
 Help us keep Fleeg Community open and inclusive following our [Code of Conduct][coc]. Please, read it with attention.
 
 ### License
-Every code patch accepted in Fleeg project codebase is licensed under AGPL v3.0. You must be careful to not include any code that can not be licensed under this license.
+Every code patch accepted in Fleeg project codebase is licensed under AGPL v3.0. 
+You must be careful to not include any code that can not be licensed under this license.
 
 Please read carefully [our license][license] and ask us if you have any questions.
 
 ### Where to Start
-To know how you can contribute to Fleeg project development, please check out project [Wiki][wiki] and Developer Guidelines [page][developer]. If you have any question you can join us on [Rocket.chat][rocketchat].
+To know how you can contribute to Fleeg project development, please check out project [Wiki][wiki] 
+and Developer Guidelines [page][developer]. If you have any question you can join us on [Gitter][gitter].
 
 Another way to start is to see bugs open on project issues.
 
@@ -29,4 +33,4 @@ Another way to start is to see bugs open on project issues.
 [license]: https://github.com/Fleeg/fleeg-platform/blob/master/LICENSE
 [wiki]: https://github.com/Fleeg/fleeg-platform/wiki
 [developer]: https://github.com/Fleeg/fleeg-platform/wiki/Developer-Guidelines
-[rocketchat]: https://fleeg.rocket.chat/
+[gitter]: https://gitter.im/fleeg/Lobby
