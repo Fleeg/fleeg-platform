@@ -19,4 +19,9 @@ after_success:
 
 notifications:
   email: false
-  webhooks: https://fleeg.rocket.chat/hooks/6fTG3EgvwyELD8WWE/NfMNWCuyh2YbTbSZKu25pDAAMsBxmCmPQAEYPbA3JWYMdtGx
+  webhooks:
+    urls:
+      - GITTER_WEBHOOK_URL
+    on_success: change
+    on_failure: always
+    on_start: never
