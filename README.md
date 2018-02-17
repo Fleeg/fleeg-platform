@@ -1,6 +1,9 @@
 ![Fleeg Logo](https://raw.githubusercontent.com/Fleeg/fleeg-platform/master/common/static/img/logo.png)
 
 # Welcome to Fleeg!
+
+### Alpha version has been deployed, try it now [HERE](http://fleeg-fleeg.7e14.starter-us-west-2.openshiftapps.com).
+
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/fleeg/Lobby)
 [![Build Status](https://travis-ci.org/Fleeg/fleeg-platform.svg?branch=master)](https://travis-ci.org/Fleeg/fleeg-platform)
 [![Requirements Status](https://requires.io/github/Fleeg/fleeg-platform/requirements.svg?branch=master)](https://requires.io/github/Fleeg/fleeg-platform/requirements/?branch=master)
