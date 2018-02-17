@@ -25,7 +25,7 @@ ser get a good experience. You may help us to delivery it faster, see below link
 
 ## Contact Us
 If you need help to setup Fleeg, want to talk about some cool enhancement or 
-you have some questions, please join us in [Gitter](https://gitter.im/fleeg/Lobby).
+you have some questions, please join us at [Gitter](https://gitter.im/fleeg/Lobby).
 
 ## Code of Conduct
 Help us keep the Fleeg Community open and inclusive. Please read and follow 
