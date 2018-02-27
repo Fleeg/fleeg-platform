@@ -4,7 +4,7 @@
 
 ### Alpha version has been deployed, try it now [HERE](http://fleeg-fleeg.7e14.starter-us-west-2.openshiftapps.com).
 
-[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/fleeg/Lobby)
+[![Gitter Chat](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat)](https://gitter.im/fleeg/Lobby)
 [![Build Status](https://travis-ci.org/Fleeg/fleeg-platform.svg?branch=master)](https://travis-ci.org/Fleeg/fleeg-platform)
 [![Requirements Status](https://requires.io/github/Fleeg/fleeg-platform/requirements.svg?branch=master)](https://requires.io/github/Fleeg/fleeg-platform/requirements/?branch=master)
 [![codecov](https://codecov.io/gh/Fleeg/fleeg-platform/branch/master/graph/badge.svg)](https://codecov.io/gh/Fleeg/fleeg-platform)
